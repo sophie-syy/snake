@@ -4,11 +4,10 @@
 typedef struct {
     char **data;   
     int width;     
-    int height;    
+    int height;   
 } Map;
 
-Map *load_map(const char *filename);
-void free_map(Map *map);
-void print_map(Map *map);
-
+Map *load_map(const char *filename);  
+void free_map(Map *map);              
+void print_map(Map *map);             
 #endif
