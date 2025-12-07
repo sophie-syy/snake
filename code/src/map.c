@@ -17,7 +17,7 @@ Map *load_map(const char *filename) {
 
     char buffer[1024];
 
-    while (fgets(buffer, sizeof(buffer), f)) {
+    while (fgets(buffer, sizeof(buffer), file)) {
         int len = strlen(buffer);
 
         if (buffer[len-1] == '\n')
