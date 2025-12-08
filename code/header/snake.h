@@ -3,7 +3,8 @@
 #include "liste.h"
 
 typedef struct {
-	Liste * 
+	Liste * taille;
+	int seize;
 } Snake;
 
 #endif

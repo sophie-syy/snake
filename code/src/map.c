@@ -3,6 +3,7 @@
 #include <string.h>
 #include "map.h"
 
+
 Map *load_map(const char *filename) {
     FILE *file = fopen(filename, "r");
     if (file == NULL) {

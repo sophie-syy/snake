@@ -1,5 +1,6 @@
 #ifndef MAP_H
 #define MAP_H
+#define LIRE 1024
 
 typedef struct {
     char **data;   

@@ -1,74 +1,85 @@
-#include <stdio.h>
-#include <stdlib.h>
+#include "liste.h"
 
 Liste* listeVide(){
-	Liste* l = malloc(sizeof(Liste));
-	l->sentAvt = creerSent();
-	l->sentArr = creerSent();
-	changerSuiv(l->sentAvt, l->sentArr);
-	return l;
+    Liste *l = malloc(sizeof(Liste));
+    l->sentAvt = creerSent();
+    l->sentArr = creerSent();
+    changerSuiv(l->sentAvt, l->sentArr);
+    return l;
 }
 
 void libererListe(Liste* l){
-	Noeud *n = l->sentAvt;
-	while(n != NULL){
-		l->sentAvt = n->suiv;
-		libererNoeud(n);
-		n = l->sentAvt;
-	}
-	free(l);
+    Noeud *n = l->sentAvt;
+    while(n != NULL){
+        l->sentAvt = n->suiv;
+        libererNoeud( n );
+        n = l->sentAvt;
+    }
+    free(l);
 }
 
 int estListeVide(Liste* l){
-	return (suivant(l->sentAvt) == l->sentAvt;
+    return (suivant(l->sentAvt) == l->sentArr);
 }
 
 Noeud* iemeNoeud(Liste* l, int i){
-	//si dehors de la liste, retourne sentArr
-	Noeud *res = l->sentAvt; 
-	int j = 0;
-	while (aSuivant(res) && j < i){
-		res = res->suiv;
-		j++;
-	}
-	return res;
+    int j = 0;
+    Noeud* res;
+    res = l->sentAvt;
+    while(res != NULL && j < i){
+        res = res->suiv;
+        j++;
+    }
+    return res;
 }
 
 Elt iemeElt(Liste* l, int i){
-	return valeur(iemeNoeud(l, i));
+    return (contenu(iemeNoeud(l, i)));
 }
 
+
 void inserer(Liste *l, int i, Elt e){
-	Noeud * pre = iemeNoeud(l, i-1);
-	Noeud *n = creerNoeud(e, suivant(pre));
-	changerSuiv(pre, n);
-	
+    Noeud* prec = iemeNoeud(l,i-1);
+    Noeud *n = creerNoeud(e, suivant(prec));
+    changerSuiv(prec,n);
 }
 
 void supprimer(Liste *l, int i){
-	Noeud *a = iemeNoeud(l, i-1);
-	Noeud *s = suivant(a);
-	changerSuiv(a, suivant(s));
-	libererNoeud(s);
+    if (l == NULL)
+    {
+        exit(EXIT_FAILURE);
+    }
+
+    Noeud* prec = iemeNoeud(l,i-1);
+    Noeud *n = suivant(prec);
+    changerSuiv(prec,suivant( n ));
+    libererNoeud( n );
 }
 
 void afficherListe(Liste *l){
-	Noeud *n = l->sentAvt; 
-	printf("[ ";
-	while (aSuivant(n)){
-		n = suivant(n);
-		printf("%d ", valeur(n));
-	}
-	printf("]";
+    if (l == NULL){
+        exit(EXIT_FAILURE);
+    }
+    Noeud *actuel = l->sentAvt;
+
+    printf("[");
+    while (actuel != NULL){
+        printf("%d ", actuel->cont);
+        actuel = actuel->suiv;
+    }
+    printf("]\n");
 }
 
-int longueur(Liste *l){
-	int t=0;
-	Noeud *n = l->sentAvt; 
-	while (aSuivant(n)){
-		n = suivant(n);
-		t++;
-	}
-	return t;
-}
+int longueur(Liste* l){
+    int lg = 0;
+    if (l == NULL){
+        exit(EXIT_FAILURE);
+    }
+    Noeud *actuel = l->sentAvt;
 
+    while (actuel != NULL){
+        lg++;
+        actuel = actuel->suiv;
+    }
+    return lg-2;
+}

@@ -10,8 +10,8 @@ typedef struct noeud Noeud;
 
 struct noeud{
     Elt cont;
-    Noeud *suiv;
     int sent;
+    Noeud *suiv;
 };
 
 Noeud* creerNoeud(Elt e, Noeud* n);
@@ -26,12 +26,10 @@ int aSuivant(Noeud* n);
 
 Noeud* suivant(Noeud* n);
 
-Elt valeur(Noeud *n);
+Elt contenu(Noeud *n);
 
-void changerValeur(Noeud* n, Elt e);
+void changerCont(Noeud* n, Elt e);
 
 void changerSuiv(Noeud * n, Noeud * p);
 
-#endif // NOEUD_H_INCLUDED
-
-
+#endif

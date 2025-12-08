@@ -26,6 +26,4 @@ void afficherListe(Liste *l);
 
 int longueur(Liste *l);
 
-#endif // LISTE_H_INCLUDED
-
-
+#endif 
