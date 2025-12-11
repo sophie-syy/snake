@@ -15,6 +15,7 @@ int main(int argc, char *argv[]) {
     printf("Map chargée (%dx%d) :\n", map->width, map->height);
 
     print_map(map);
-    free_map(map);
+    
+    // free_map(map);
     return 0;
 }
