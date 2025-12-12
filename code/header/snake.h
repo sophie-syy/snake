@@ -5,19 +5,19 @@
 #include "map.h"
 
 typedef struct {
-	Liste * snake;
+    char *caract;
 	int size;
+	Liste *body;
 } Snake;
 
-void init_position(Liste* l);
+Snake *create_Snake(char c);
 
-void mouvement_snake(Liste *l);
+void init_position(Snake *snake);
 
-void eat_insert(char c);
+void mouve_snake(Snake *snake, Map *map);
 
-void caseVide();
+void eat_insert(Snake *snake,char c);
 
-void eat();
- 
+void what_is_case(const Map *map, int x, int y);
 
 #endif

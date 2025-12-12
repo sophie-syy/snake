@@ -70,6 +70,7 @@ void free_map(Map *map) {
         free(map->data[i]); 
     }
 
-    free(map->data); 
+    free(map->data);
+
     free(map);        
 }
