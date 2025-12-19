@@ -5,14 +5,15 @@
 #include "map.h"
 
 typedef struct {
-    char *caract;
 	int size;
 	Liste *body;
+	Liste *x;
+	Liste *y;
 } Snake;
 
 Snake *create_Snake(char c);
 
-void init_position(Snake *snake);
+void init(Snake *snake);
 
 void mouve_snake(Snake *snake, Map *map);
 
