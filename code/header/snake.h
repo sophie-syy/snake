@@ -3,21 +3,25 @@
 
 #include "liste.h"
 #include "map.h"
+#include "spawn.h"
 
 typedef struct {
 	int size;
 	Liste *body;
 	Liste *x;
 	Liste *y;
+	int score;
 } Snake;
 
-Snake *create_Snake(char c);
+Snake* create_Snake();
 
 void init(Snake *snake);
 
-void mouve_snake(Snake *snake, Map *map);
+void eat_insert(Snake *snake, Bonus* c);
 
-void eat_insert(Snake *snake,char c);
+void belongs_to_snake(Snake* snake, Bonus* c);
+
+void mouve_snake(Snake *snake, char button);
 
 void what_is_case(const Map *map, int x, int y);
 
