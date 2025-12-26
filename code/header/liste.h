@@ -3,7 +3,7 @@
 
 #include "noeud.h"
 
-typedef struct liste{
+typedef struct _liste{
     Noeud *sentAvt;
     Noeud *sentArr;
 } Liste;

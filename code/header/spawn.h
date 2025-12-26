@@ -2,8 +2,9 @@
 #define SPAWN_H
 
 #include "spawn.h"
+#include <stdbool.h>
 
-typedef struct {
+typedef struct _bonus{
 	char letter;
 	int x;
 	int y;

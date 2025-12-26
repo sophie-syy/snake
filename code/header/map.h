@@ -2,7 +2,7 @@
 #define MAP_H
 #define LIRE 1024
 
-typedef struct {
+typedef struct _map{
     char **data;   
     int width;     
     int height;   

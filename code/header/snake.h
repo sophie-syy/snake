@@ -5,7 +5,7 @@
 #include "map.h"
 #include "spawn.h"
 
-typedef struct {
+typedef struct _snake{
 	int size;
 	Liste *body;
 	Liste *x;
@@ -19,7 +19,7 @@ void init(Snake *snake);
 
 void eat_insert(Snake *snake, Bonus* c);
 
-void belongs_to_snake(Snake* snake, Bonus* c);
+bool belongs_to_snake(Snake* snake, Bonus* c);
 
 void mouve_snake(Snake *snake, char button);
 

@@ -6,9 +6,9 @@
 
 typedef int Elt;
 
-typedef struct noeud Noeud;
+typedef struct _noeud Noeud;
 
-struct noeud{
+struct _noeud{
     Elt cont;
     int sent;
     Noeud *suiv;
