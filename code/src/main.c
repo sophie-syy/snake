@@ -1,6 +1,7 @@
 #include <stdio.h>
 #include "map.h"
 #include "snake.h"
+#include "spawn.h"
 
 int main(int argc, char *argv[]) {
     if (argc < 2) {
@@ -18,6 +19,12 @@ int main(int argc, char *argv[]) {
     
     Snake *snake = create_Snake();
     init(snake);
+
+    Bonus* bonus = create_Bonus('x', 1, 1);
+    eat_insert(snake, bonus);
+    afficherListe(snake->body);
+    afficherListe(snake->x);
+    afficherListe(snake->y);
 
     // free_map(map);
     return 0;

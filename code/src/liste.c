@@ -64,7 +64,7 @@ void afficherListe(Liste *l){
 
     printf("[");
     while (actuel != NULL){
-        printf("%d ", actuel->cont);
+        printf("%c ", actuel->cont);
         actuel = actuel->suiv;
     }
     printf("]\n");

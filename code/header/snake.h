@@ -15,11 +15,13 @@ typedef struct _snake{
 
 Snake* create_Snake();
 
+void freeSnake(Snake *snake);
+
 void init(Snake *snake);
 
-void eat_insert(Snake *snake, Bonus* c);
+void eat_insert(Snake *snake, Bonus* bonus);
 
-bool belongs_to_snake(Snake* snake, Bonus* c);
+bool belongs_to_snake(Snake* snake, Bonus* bonus);
 
 void mouve_snake(Snake *snake, char button);
 

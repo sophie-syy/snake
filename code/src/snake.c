@@ -24,6 +24,13 @@ Snake* create_Snake(){
   return snake;
 }
 
+void freeSnake(Snake *snake){
+  libererListe(snake->body);
+  libererListe(snake->x);
+  libererListe(snake->y);
+  free(snake);
+}
+
 void init(Snake *snake){
   snake->size = 1;
   snake->score = 0;
@@ -33,12 +40,12 @@ void init(Snake *snake){
   
 }
 
-void eat_insert(Snake *snake, Bonus* c){
+void eat_insert(Snake *snake, Bonus* bonus){
   snake->size += 1;
   snake->score += 1;
-  inserer(snake->body, 0, c->letter);
-  inserer(snake->x, 0, c->x);
-  inserer(snake->y, 0, c->y);
+  inserer(snake->body, 0, bonus->letter);
+  inserer(snake->x, 0, bonus->x);
+  inserer(snake->y, 0, bonus->y);
 }
 
 bool belongs_to_snake(Snake* snake, Bonus* bonus){

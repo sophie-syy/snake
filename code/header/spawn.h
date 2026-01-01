@@ -1,7 +1,6 @@
 #ifndef SPAWN_H
 #define SPAWN_H
 
-#include "spawn.h"
 #include <stdbool.h>
 
 typedef struct _bonus{
@@ -10,9 +9,11 @@ typedef struct _bonus{
 	int y;
 } Bonus;
 
-bool have_letter();
+Bonus* create_Bonus(char letter, int x, int y);
 
-Bonus* create_Bonus();
+void freeBonus(Bonus *bonus);
+
+bool have_letter();
 
 int number_steps();
 

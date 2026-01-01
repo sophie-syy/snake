@@ -13,7 +13,7 @@ Noeud* creerNoeud(Elt e, Noeud* s){
 }
 
 void libererNoeud(Noeud* n){
-    free( n );
+    free(n);
 }
 
 Noeud* creerSent(){
