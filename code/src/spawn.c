@@ -2,13 +2,21 @@
 #include <stdbool.h>
 #include <stdlib.h>
 #include <time.h>
-#include"spawn.h"
+#include "snake.h"
+#include "spawn.h"
 
 
 char tab[] = {'a', 'b', 'c', 'd', 'e', 'f', 'g', 
          'h', 'i', 'j', 'k', 'l', 'm', 'n', 
          'o', 'p', 'q', 'r', 's', 't', 'u',
          'v', 'w', 'x', 'y', 'z'};
+
+char consone[] = {'b', 'c', 'd', 'f', 'g', 
+                  'h', 'j', 'k', 'l', 'm', 
+                  'n', 'p', 'q', 'r', 's', 
+                  't', 'v', 'w', 'x', 'z'};
+
+char voyelle[] = {'a', 'e', 'i', 'o', 'u', 'y'};
 
          
 Bonus* create_Bonus(Map *map, Snake * snake){
@@ -19,11 +27,7 @@ Bonus* create_Bonus(Map *map, Snake * snake){
     bonus->x = 1 + rand() % map->width;
     bonus->y = 1 + rand() % map->height;
     bonus->pas = 0;
-    if(check_bonus(snake, bonus)){
-        create_Bonus(map, snake);
-    }else{
-        return bonus;
-    }
+    return bonus;
     
 }
 
@@ -53,7 +57,15 @@ void write_bonus(Map *map, Bonus * bonus){
 Bonus* suprime_bonus(Map *map, Bonus *bonus, Snake * snake){
     if(bonus->pas >= 10){
         freeBonus(bonus);
-        Bonus *bonus = create_Bonus(map, snake);
+        bonus = create_Bonus(map, snake);
     }
     return bonus;
+}
+
+void eat_insert(Snake *snake, Bonus* bonus){
+  snake->size += 1;
+  snake->score += 1;
+  inserer(snake->body, 0, bonus->letter);
+  inserer(snake->x, 0, bonus->x);
+  inserer(snake->y, 0, bonus->y);
 }

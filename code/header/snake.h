@@ -12,6 +12,13 @@ typedef struct _snake{
 	int score;
 } Snake;
 
+typedef struct _bonus{
+	char letter;
+	int x;
+	int y;
+	int pas;
+} Bonus;
+
 
 Snake* create_Snake();
 
@@ -27,8 +34,6 @@ void suprime_queue(Snake *snake);
 int what_is_case(const Map *map, int x, int y);
 
 int mouvement_snake(Snake *snake, char button, Map *map);
-
-void eat_insert(Snake *snake, char bonus);
 
 
 #endif

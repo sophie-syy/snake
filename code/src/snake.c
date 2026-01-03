@@ -166,15 +166,6 @@ int mouvement_snake(Snake *snake, char button, Map *map){
   return resultat;
 }
 
-/*
-void eat_insert(Snake *snake, Bonus* bonus){
-  snake->size += 1;
-  snake->score += 1;
-  inserer(snake->body, 0, bonus->letter);
-  inserer(snake->x, 0, bonus->x);
-  inserer(snake->y, 0, bonus->y);
-}
-*/
 
 
 

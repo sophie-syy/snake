@@ -7,13 +7,16 @@
 int main(int argc, char *argv[]) {
     Map *map = load_map(argv[1]);
     Snake *snake = create_Snake();
-    Bonus * bonus = create_Bonus(map);
+    Bonus * bonus = create_Bonus(map, snake);
     int score = 0, x = 0;
     char s;
 
     if (argc < 2) printf("Usage: %s Donner le fichier map en arguments \n", argv[0]);
     if (map == NULL) return 1;
     init(snake);
+    /*while(check_bonus(snake, bonus)) {
+        bonus = suprime_bonus(map, bonus, snake);
+    }*/
 
 
     while(x!=1){
@@ -32,9 +35,8 @@ int main(int argc, char *argv[]) {
         printf("sens: ");
         scanf("%c", &s);
 
-    
         x = mouvement_snake(snake, s, map);
-        bonus = suprime_bonus(map, bonus);
+        bonus = suprime_bonus(map, bonus, snake);
         if(x == 0) bonus->pas += 1;
     }
     printf("Perdu!");
