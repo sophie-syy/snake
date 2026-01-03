@@ -7,8 +7,7 @@
 Map *load_map(const char *filename) {
     FILE *file = fopen(filename, "r");
     if (file == NULL) {
-        perror("Erreur d'ouverture de map.txt");
-        return NULL;
+        perror("Erreur d'ouverture de carte.txt");
     }
 
     Map *map = malloc(sizeof(Map));

@@ -1,6 +1,6 @@
 #include <stdio.h>
 #include "snake.h"
-#include "spawn.h"
+
 
 Snake* create_Snake(){
   Snake *snake = malloc(sizeof(Snake));
@@ -24,12 +24,14 @@ Snake* create_Snake(){
   return snake;
 }
 
+
 void freeSnake(Snake *snake){
   libererListe(snake->body);
   libererListe(snake->x);
   libererListe(snake->y);
   free(snake);
 }
+
 
 void init(Snake *snake){
   snake->size = 1;
@@ -40,6 +42,131 @@ void init(Snake *snake){
   
 }
 
+
+void write_snake(Map *map, Snake *snake){
+    int x, y, i;
+    char body_char, current_char;
+
+    if (map == NULL || map->data == NULL || snake == NULL) return;
+    
+    for(i = 0; i < snake->size + 1; i++){
+        x = iemeElt(snake->x, i);
+        y = iemeElt(snake->y, i);
+        body_char = iemeElt(snake->body, i);
+        
+        if (y >= 0 && y < map->height && x >= 0 && x < map->width) {
+            current_char = map->data[y][x];
+
+            if(current_char != '#'){
+                map->data[y][x] = body_char;
+            }
+        }
+    }
+}
+
+void suprime_queue(Snake *snake){
+  supprimer(snake->x, snake->size+1);
+  supprimer(snake->y, snake->size+1);
+}
+
+
+int what_is_case(const Map *map, int x, int y){
+  char valeur = map->data[y][x];
+  if(valeur == '#'){
+    return 0;
+  }else if(valeur == ' '){
+    return 1;
+  }else{
+    return 2;
+  }
+}
+
+int mouvement_snake(Snake *snake, char button, Map *map){
+  int resultat, mouvement;
+  int x_elt = iemeElt(snake->x, 1);
+  int y_elt = iemeElt(snake->y, 1);
+
+  switch(button){
+    case 'o':
+      resultat = 0;
+      mouvement = what_is_case(map, x_elt, y_elt-1);
+
+      if(mouvement == 1){
+        inserer(snake->x, 0, x_elt);
+        inserer(snake->y, 0, y_elt-1);
+        suprime_queue(snake);
+      }else if(mouvement == 2){
+        inserer(snake->body, 0, map->data[x_elt][y_elt-1]); 
+        inserer(snake->x, 0, x_elt);
+        inserer(snake->y, 0, y_elt-1);
+      }else{
+        resultat = 1;
+      }
+      break;
+
+    case 'k':
+      resultat = 0;
+      mouvement = what_is_case(map, x_elt-1, y_elt);
+
+      if(mouvement == 1){
+        inserer(snake->x, 0, x_elt-1);
+        inserer(snake->y, 0, y_elt);
+        suprime_queue(snake);
+      }else if(mouvement == 2){
+        inserer(snake->body, 0, map->data[x_elt-1][y_elt]); 
+        inserer(snake->x, 0, x_elt-1);
+        inserer(snake->y, 0, y_elt);
+      }else{
+        resultat = 1;
+      }
+      break;
+
+    case 'm':
+      resultat = 0;
+      mouvement = what_is_case(map, x_elt+1, y_elt);
+
+      if(mouvement == 1){
+        inserer(snake->x, 0, x_elt+1);
+        inserer(snake->y, 0,y_elt);
+        suprime_queue(snake);
+      }else if(mouvement == 2){
+        inserer(snake->body, 0, map->data[x_elt+1][y_elt]); 
+        inserer(snake->x, 0, x_elt+1);
+        inserer(snake->y, 0,y_elt);
+      }else{
+        resultat = 1;
+      }
+      break;
+
+    case 'l':
+      resultat = 0;
+      mouvement = what_is_case(map, x_elt, y_elt+1);
+
+      if(mouvement == 1){
+        inserer(snake->x, 0, x_elt);
+        inserer(snake->y, 0, y_elt+1);
+        suprime_queue(snake);
+      }else if(mouvement == 2){
+        inserer(snake->body, 0, map->data[x_elt][y_elt+1]); 
+        inserer(snake->x, 0, x_elt);
+        inserer(snake->y, 0, y_elt+1);
+      }else{
+        resultat = 1;
+      }
+      break;
+      
+    case 'q':
+      resultat = 1;
+      break;
+    default:
+      printf("Erreur de touche.\n");
+      break;
+  }
+
+  return resultat;
+}
+
+/*
 void eat_insert(Snake *snake, Bonus* bonus){
   snake->size += 1;
   snake->score += 1;
@@ -47,40 +174,9 @@ void eat_insert(Snake *snake, Bonus* bonus){
   inserer(snake->x, 0, bonus->x);
   inserer(snake->y, 0, bonus->y);
 }
+*/
 
-bool belongs_to_snake(Snake* snake, Bonus* bonus){
-  Noeud *actuel_x = snake->x->sentAvt;
-  Noeud *actuel_y = snake->y->sentAvt;
 
-  while (actuel_x != NULL){
-    if(actuel_x->cont == bonus->x && actuel_y->cont == bonus->y){
-      return true;
-    }
-    actuel_x = actuel_x->suiv;
-    actuel_y = actuel_x->suiv;
-  }
-  return false;
-}
 
-void mouvement_snake(Snake *snake, char button){
-  switch(button){
-    case 'o':
-      break;
-    case 'k':
-      break;
-    case 'm':
-      break;
-    case 'l':
-      break;
-    case 'q':
-      break;
-    default:
-      break;
-  }
-}
-
-void what_is_case(const Map *map, int x, int y){
-
-}
 
 

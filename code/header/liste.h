@@ -22,7 +22,7 @@ void inserer(Liste *l, int i, Elt e);
 
 void supprimer(Liste *l, int i);
 
-void afficherListe(Liste *l);
+void afficherListe(Liste *l, int nature);
 
 int longueur(Liste *l);
 

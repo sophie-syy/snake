@@ -56,7 +56,7 @@ void supprimer(Liste *l, int i){
     libererNoeud( n );
 }
 
-void afficherListe(Liste *l){
+void afficherListe(Liste *l, int nature){
     if (l == NULL){
         exit(EXIT_FAILURE);
     }
@@ -64,7 +64,12 @@ void afficherListe(Liste *l){
 
     printf("[");
     while (actuel != NULL){
-        printf("%c ", actuel->cont);
+        if(nature == 1){
+            printf("%d", actuel->cont);
+        }else{
+            printf("%c", actuel->cont);
+        }
+        
         actuel = actuel->suiv;
     }
     printf("]\n");

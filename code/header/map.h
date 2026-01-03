@@ -2,6 +2,7 @@
 #define MAP_H
 #define LIRE 1024
 
+
 typedef struct _map{
     char **data;   
     int width;     
@@ -9,6 +10,10 @@ typedef struct _map{
 } Map;
 
 Map *load_map(const char *filename);  
+
 void free_map(Map *map);              
-void print_map(Map *map);             
+
+void print_map(Map *map);      
+
+
 #endif
