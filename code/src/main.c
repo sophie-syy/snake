@@ -11,7 +11,7 @@ void purge(void){
 int main(int argc, char *argv[]) {
     Map *map = load_map(argv[1]);
     Snake *snake = create_Snake();
-    Bonus * bonus = create_Bonus(map, snake);
+    Bonus * bonus = init_Bonus(snake, create_Bonus(map, snake), map);
     int x = 0;
     char s = 'l';
 
@@ -23,18 +23,25 @@ int main(int argc, char *argv[]) {
     while(x!=1){
         write_bonus(map, bonus);
         write_snake(map, snake);
+
         printf("Map chargée (%dx%d) :\n", map->width, map->height);
         print_map(map);
-        
-        
+
+
+        printf("--------------\n");
+        printf("Snake: \n");
         afficherListe(snake->body, 0);
         afficherListe(snake->x, 1);
         afficherListe(snake->y, 1);
+        printf("--------------\n");
         printf("pas = %d \n", bonus->pas);
-        printf("%c %d %d \n", bonus->letter, bonus->x, bonus->y);
+
+        printf("score = %d \n", snake->score);
+        printf("--------------\n");
 
         map = load_map(argv[1]);
-        printf("sens: \n");
+
+        printf("sens: ");
         scanf("%c", &s);
         purge();
 
@@ -44,6 +51,8 @@ int main(int argc, char *argv[]) {
         bonus = suprime_bonus(map, bonus, snake);
         if(x == 0) bonus->pas += 1;
     }
+
+    printf("--------------\n");
     printf("Perdu!\n");
     printf("score = %d \n", snake->score);
     free_map(map);

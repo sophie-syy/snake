@@ -2,6 +2,8 @@
 #include "snake.h"
 
 
+char voyelle[] = {'a', 'e', 'i', 'o', 'u', 'y'};
+
 Snake* create_Snake(){
   Snake *snake = malloc(sizeof(Snake));
   snake->size = 0;
@@ -77,37 +79,57 @@ bool estBonus(Bonus *bonus, int x, int y){
   }
 }
 
+bool appartient_v(Bonus *bonus){
+  int i=0, v = 0;
+  while(i<6 && v == 0){
+    if(bonus->letter == voyelle[i]){
+      v = 1;
+    }else{
+      i++;
+    }
+  }
+  return i < 6;
+}
+
 void eat_insert(Snake *snake, Bonus* bonus, Map *map){
- /* int s_x = iemeElt(snake->x, 1);
-  int s_y = iemeElt(snake->y, 1);
-  int b_x = bonus->x;
-  int b_y = bonus->y;
-
-  if(s_x == b_x && s_y == b_y ){
-
-    printf("eat\n");*/
     snake->size += 1;
-    snake->score += 1;
+    if(appartient_v(bonus)){
+      snake->score += 10;
+    }else{
+      snake->score += 5;
+    }
+    
     inserer(snake->body, 0, bonus->letter);
     inserer(snake->x, 0, bonus->x);
     inserer(snake->y, 0, bonus->y);
-    //bonus->pas = 10; 
-    /*return true;
-  }else{
-    return false;
-  }*/
+}
+
+
+bool appartient_snake(Snake* snake, int x, int y){
+    Noeud *actuel_x = snake->x->sentAvt;
+    Noeud *actuel_y = snake->y->sentAvt;
+
+  while (actuel_x != NULL){
+    if(actuel_x->cont == x && actuel_y->cont == y){
+      return true;
+    }
+    actuel_x = actuel_x->suiv;
+    actuel_y = actuel_y->suiv;
+  }
+  return false;
 }
 
 
 int case_suivant(Map *map, int x, int y, Bonus *bonus, Snake *snake){
   char valeur = map->data[y][x];
+
   if(estBonus(bonus, x, y)){
     eat_insert(snake, bonus, map);
     return 2; 
-  }else if(valeur == ' '){
-    return 1;
-  }else{
+  }else if(appartient_snake(snake, x, y) || valeur == '#'){
     return 0;
+  }else{
+    return 1;
   }
 }
 
@@ -185,7 +207,6 @@ int mouvement_snake(Snake *snake, char button, Map *map, Bonus *bonus){
       resultat = 3;
       break;
   }
-  printf("mouvement %d\n", mouvement);
   return resultat;
 }
 

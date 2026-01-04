@@ -34,7 +34,11 @@ void suprime_queue(Snake *snake);
 
 bool estBonus(Bonus *bonus, int x, int y);
 
+bool appartient_v(Bonus *bonus);
+
 void eat_insert(Snake *snake, Bonus* bonus, Map *map);
+
+bool appartient_snake(Snake* snake, int x, int y);
 
 int case_suivant(Map *map, int x, int y, Bonus *bonus, Snake *snake);
 

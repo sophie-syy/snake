@@ -7,7 +7,7 @@
 
 Bonus* create_Bonus(Map *map, Snake * snake);
 
-bool check_bonus(Snake * snake, Bonus *bonus);
+Bonus * init_Bonus(Snake * snake, Bonus *bonus, Map *map);
 
 void freeBonus(Bonus *bonus);
 

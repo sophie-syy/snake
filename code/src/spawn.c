@@ -13,13 +13,6 @@ char tab[] = {'a', 'b', 'c', 'd', 'e',
               'u', 'v', 'w', 'x', 'y',
               'z'};
 
-char consone[] = {'b', 'c', 'd', 'f', 'g', 
-                  'h', 'j', 'k', 'l', 'm', 
-                  'n', 'p', 'q', 'r', 's', 
-                  't', 'v', 'w', 'x', 'z'};
-
-char voyelle[] = {'a', 'e', 'i', 'o', 'u', 'y'};
-
          
 Bonus* create_Bonus(Map *map, Snake * snake){
     srand((unsigned)time(NULL));
@@ -33,19 +26,12 @@ Bonus* create_Bonus(Map *map, Snake * snake){
     
 }
 
-bool check_bonus(Snake * snake, Bonus *bonus){
-    Noeud *actuel_x = snake->x->sentAvt;
-    Noeud *actuel_y = snake->y->sentAvt;
-
-  while (actuel_x != NULL){
-    if(actuel_x->cont == bonus->x && actuel_y->cont == bonus->y){
-      return true;
-    }
-    actuel_x = actuel_x->suiv;
-    actuel_y = actuel_x->suiv;
+Bonus * init_Bonus(Snake * snake, Bonus *bonus, Map *map){
+  while(appartient_snake(snake, bonus->x, bonus->y)) {
+    freeBonus(bonus);
+    bonus = create_Bonus(map, snake);
   }
-  return false;
-    
+  return bonus;
 }
 
 void freeBonus(Bonus *bonus){
@@ -59,7 +45,7 @@ void write_bonus(Map *map, Bonus * bonus){
 Bonus* suprime_bonus(Map *map, Bonus *bonus, Snake * snake){
     if(bonus->pas >= 10){
         freeBonus(bonus);
-        bonus = create_Bonus(map, snake);
+        bonus = init_Bonus(snake, create_Bonus(map, snake), map);
     }
     return bonus;
 }
