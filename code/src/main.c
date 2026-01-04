@@ -13,7 +13,7 @@ int main(int argc, char *argv[]) {
     Snake *snake = create_Snake();
     Bonus * bonus = init_Bonus(snake, create_Bonus(map, snake), map);
     int x = 0;
-    char s = 'l';
+    char s;
 
     if (argc < 2) printf("Usage: %s Donner le fichier map en arguments \n", argv[0]);
     if (map == NULL) return 1;
@@ -21,21 +21,32 @@ int main(int argc, char *argv[]) {
 
     
     while(x!=1){
+        /*printf("Vous voulez continué ou une nouvel? (c/n): ");
+        scanf("%c", &s);
+        purge();
+
+        if(s == 'c'){
+            map = load_map(argv[2]);
+        }*/
+
+
         write_bonus(map, bonus);
         write_snake(map, snake);
 
         printf("Map chargée (%dx%d) :\n", map->width, map->height);
         print_map(map);
-
-
+        
         printf("--------------\n");
+        
         printf("Snake: \n");
         afficherListe(snake->body, 0);
         afficherListe(snake->x, 1);
         afficherListe(snake->y, 1);
-        printf("--------------\n");
-        printf("pas = %d \n", bonus->pas);
 
+        printf("--------------\n");
+
+        printf("pas = %d \n", bonus->pas);
+        
         printf("score = %d \n", snake->score);
         printf("--------------\n");
 
@@ -47,7 +58,6 @@ int main(int argc, char *argv[]) {
 
         x = mouvement_snake(snake, s, map, bonus);
         
-        printf("x = %d\n", x);
         bonus = suprime_bonus(map, bonus, snake);
         if(x == 0) bonus->pas += 1;
     }
@@ -55,6 +65,9 @@ int main(int argc, char *argv[]) {
     printf("--------------\n");
     printf("Perdu!\n");
     printf("score = %d \n", snake->score);
+
+    freeSnake(snake);
+    freeBonus(bonus);
     free_map(map);
     return 0;
 }
