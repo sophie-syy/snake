@@ -77,14 +77,35 @@ bool estBonus(Bonus *bonus, int x, int y){
   }
 }
 
+void eat_insert(Snake *snake, Bonus* bonus, Map *map){
+ /* int s_x = iemeElt(snake->x, 1);
+  int s_y = iemeElt(snake->y, 1);
+  int b_x = bonus->x;
+  int b_y = bonus->y;
 
-int what_is_case(const Map *map, int x, int y, Bonus *bonus){
+  if(s_x == b_x && s_y == b_y ){
+
+    printf("eat\n");*/
+    snake->size += 1;
+    snake->score += 1;
+    inserer(snake->body, 0, bonus->letter);
+    inserer(snake->x, 0, bonus->x);
+    inserer(snake->y, 0, bonus->y);
+    //bonus->pas = 10; 
+    /*return true;
+  }else{
+    return false;
+  }*/
+}
+
+
+int case_suivant(Map *map, int x, int y, Bonus *bonus, Snake *snake){
   char valeur = map->data[y][x];
-
-  if(valeur == ' '){
+  if(estBonus(bonus, x, y)){
+    eat_insert(snake, bonus, map);
+    return 2; 
+  }else if(valeur == ' '){
     return 1;
-  }else if(estBonus(bonus, x, y)){
-    return 2;    
   }else{
     return 0;
   }
@@ -98,16 +119,14 @@ int mouvement_snake(Snake *snake, char button, Map *map, Bonus *bonus){
   switch(button){
     case 'o':
       resultat = 0;
-      mouvement = what_is_case(map, x_elt, y_elt-1, bonus);
+      mouvement = case_suivant(map, x_elt, y_elt-1, bonus, snake);
 
       if(mouvement == 1){
         inserer(snake->x, 0, x_elt);
         inserer(snake->y, 0, y_elt-1);
         suprime_queue(snake);
       }else if(mouvement == 2){
-        inserer(snake->body, 0, map->data[x_elt][y_elt-1]); 
-        inserer(snake->x, 0, x_elt);
-        inserer(snake->y, 0, y_elt-1);
+        bonus->pas = 10; 
       }else{
         resultat = 1;
       }
@@ -115,16 +134,14 @@ int mouvement_snake(Snake *snake, char button, Map *map, Bonus *bonus){
 
     case 'k':
       resultat = 0;
-      mouvement = what_is_case(map, x_elt-1, y_elt, bonus);
+      mouvement = case_suivant(map, x_elt-1, y_elt, bonus, snake);
 
       if(mouvement == 1){
         inserer(snake->x, 0, x_elt-1);
         inserer(snake->y, 0, y_elt);
         suprime_queue(snake);
       }else if(mouvement == 2){
-        inserer(snake->body, 0, map->data[x_elt-1][y_elt]); 
-        inserer(snake->x, 0, x_elt-1);
-        inserer(snake->y, 0, y_elt);
+        bonus->pas = 10; 
       }else{
         resultat = 1;
       }
@@ -132,16 +149,14 @@ int mouvement_snake(Snake *snake, char button, Map *map, Bonus *bonus){
 
     case 'm':
       resultat = 0;
-      mouvement = what_is_case(map, x_elt+1, y_elt, bonus);
+      mouvement = case_suivant(map, x_elt+1, y_elt, bonus, snake);
 
       if(mouvement == 1){
         inserer(snake->x, 0, x_elt+1);
         inserer(snake->y, 0,y_elt);
         suprime_queue(snake);
       }else if(mouvement == 2){
-        inserer(snake->body, 0, map->data[x_elt+1][y_elt]); 
-        inserer(snake->x, 0, x_elt+1);
-        inserer(snake->y, 0,y_elt);
+        bonus->pas = 10; 
       }else{
         resultat = 1;
       }
@@ -149,17 +164,14 @@ int mouvement_snake(Snake *snake, char button, Map *map, Bonus *bonus){
 
     case 'l':
       resultat = 0;
-      mouvement = what_is_case(map, x_elt, y_elt+1, bonus);
-      printf("valeur %c\n", map->data[y_elt+1][x_elt]);
+      mouvement = case_suivant(map, x_elt, y_elt+1, bonus, snake);
 
       if(mouvement == 1){
         inserer(snake->x, 0, x_elt);
         inserer(snake->y, 0, y_elt+1);
         suprime_queue(snake);
       }else if(mouvement == 2){
-        inserer(snake->body, 0, map->data[x_elt][y_elt+1]); 
-        inserer(snake->x, 0, x_elt);
-        inserer(snake->y, 0, y_elt+1);
+        bonus->pas = 10; 
       }else{
         resultat = 1;
       }
@@ -170,7 +182,7 @@ int mouvement_snake(Snake *snake, char button, Map *map, Bonus *bonus){
       break;
 
     default:
-      resultat = 0;
+      resultat = 3;
       break;
   }
   printf("mouvement %d\n", mouvement);
@@ -178,7 +190,26 @@ int mouvement_snake(Snake *snake, char button, Map *map, Bonus *bonus){
 }
 
 
-
+/*
+#################################################
+#                                               #
+#                                               #
+#                                               #
+#                                               #
+#                                               #
+#                                               #
+#                                               #
+#                                               #
+#                                               #
+#                                               #
+#                                               #
+#                                               #
+#                                               #
+#                                               #
+#                                               #
+#                                               #
+#################################################
+*/
 
 
 

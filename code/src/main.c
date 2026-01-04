@@ -3,12 +3,16 @@
 #include "snake.h"
 #include "spawn.h"
 
+void purge(void){
+    int c = 0;
+    while ((c=getchar())!='\n' && c!= EOF);
+}
 
 int main(int argc, char *argv[]) {
     Map *map = load_map(argv[1]);
     Snake *snake = create_Snake();
     Bonus * bonus = create_Bonus(map, snake);
-    int score = 0, x = 0;
+    int x = 0;
     char s = 'l';
 
     if (argc < 2) printf("Usage: %s Donner le fichier map en arguments \n", argv[0]);
@@ -17,8 +21,8 @@ int main(int argc, char *argv[]) {
 
     
     while(x!=1){
-        write_snake(map, snake);
         write_bonus(map, bonus);
+        write_snake(map, snake);
         printf("Map chargée (%dx%d) :\n", map->width, map->height);
         print_map(map);
         
@@ -32,18 +36,16 @@ int main(int argc, char *argv[]) {
         map = load_map(argv[1]);
         printf("sens: \n");
         scanf("%c", &s);
-        score++;
+        purge();
 
-        if(eat_insert(snake, bonus, map, s)){
-            bonus->pas = 10; 
-        }
         x = mouvement_snake(snake, s, map, bonus);
+        
         printf("x = %d\n", x);
         bonus = suprime_bonus(map, bonus, snake);
         if(x == 0) bonus->pas += 1;
     }
     printf("Perdu!\n");
-    printf("score = %d \n", score);
+    printf("score = %d \n", snake->score);
     free_map(map);
     return 0;
 }

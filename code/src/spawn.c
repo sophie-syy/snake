@@ -64,30 +64,3 @@ Bonus* suprime_bonus(Map *map, Bonus *bonus, Snake * snake){
     return bonus;
 }
 
-bool eat_insert(Snake *snake, Bonus* bonus, Map *map, char button){
-  int s_x = iemeElt(snake->x, 1);
-  int s_y = iemeElt(snake->y, 1);
-  int b_x = bonus->x;
-  int b_y = bonus->y;
-
-  printf("%d = %d, %d = %d \n", s_x-1, b_x, s_y, b_y);
-  printf("%d = %d, %d = %d \n", s_x+1, b_x, s_y, b_y);
-  printf("%d = %d, %d = %d \n", s_x, b_x, s_y-1, b_y);
-  printf("%d = %d, %d = %d \n", s_x, b_x, s_y+1, b_y);
-
-  if((s_x-1 == b_x && s_y == b_y && button == 'k') || 
-     (s_x == b_x && s_y-1 == b_y && button == 'o') || 
-     (s_x+1 == b_x && s_y == b_y && button == 'm') || 
-     (s_x == b_x && s_y+1 == b_y && button == 'l')){
-
-    printf("eat\n");
-    snake->size += 1;
-    snake->score += 1;
-    inserer(snake->body, 0, bonus->letter);
-    inserer(snake->x, 0, bonus->x);
-    inserer(snake->y, 0, bonus->y);
-    return true;
-  }else{
-    return false;
-  }
-}

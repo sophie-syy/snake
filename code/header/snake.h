@@ -34,7 +34,9 @@ void suprime_queue(Snake *snake);
 
 bool estBonus(Bonus *bonus, int x, int y);
 
-int what_is_case(const Map *map, int x, int y, Bonus *bonus);
+void eat_insert(Snake *snake, Bonus* bonus, Map *map);
+
+int case_suivant(Map *map, int x, int y, Bonus *bonus, Snake *snake);
 
 int mouvement_snake(Snake *snake, char button, Map *map, Bonus *bonus);
 
