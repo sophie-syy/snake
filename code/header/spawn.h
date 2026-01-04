@@ -15,6 +15,6 @@ void write_bonus(Map *map, Bonus * bonus);
 
 Bonus* suprime_bonus(Map *map, Bonus *bonus, Snake * snake);
 
-void eat_insert(Snake *snake, Bonus* bonus);
+bool eat_insert(Snake *snake, Bonus* bonus, Map *map, char button);
 
 #endif

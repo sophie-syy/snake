@@ -69,19 +69,28 @@ void suprime_queue(Snake *snake){
   supprimer(snake->y, snake->size+1);
 }
 
-
-int what_is_case(const Map *map, int x, int y){
-  char valeur = map->data[y][x];
-  if(valeur == '#'){
-    return 0;
-  }else if(valeur == ' '){
-    return 1;
+bool estBonus(Bonus *bonus, int x, int y){
+  if(bonus->x == x && bonus->y == y){
+    return true;
   }else{
-    return 2;
+    return false;
   }
 }
 
-int mouvement_snake(Snake *snake, char button, Map *map){
+
+int what_is_case(const Map *map, int x, int y, Bonus *bonus){
+  char valeur = map->data[y][x];
+
+  if(valeur == ' '){
+    return 1;
+  }else if(estBonus(bonus, x, y)){
+    return 2;    
+  }else{
+    return 0;
+  }
+}
+
+int mouvement_snake(Snake *snake, char button, Map *map, Bonus *bonus){
   int resultat, mouvement;
   int x_elt = iemeElt(snake->x, 1);
   int y_elt = iemeElt(snake->y, 1);
@@ -89,7 +98,7 @@ int mouvement_snake(Snake *snake, char button, Map *map){
   switch(button){
     case 'o':
       resultat = 0;
-      mouvement = what_is_case(map, x_elt, y_elt-1);
+      mouvement = what_is_case(map, x_elt, y_elt-1, bonus);
 
       if(mouvement == 1){
         inserer(snake->x, 0, x_elt);
@@ -106,7 +115,7 @@ int mouvement_snake(Snake *snake, char button, Map *map){
 
     case 'k':
       resultat = 0;
-      mouvement = what_is_case(map, x_elt-1, y_elt);
+      mouvement = what_is_case(map, x_elt-1, y_elt, bonus);
 
       if(mouvement == 1){
         inserer(snake->x, 0, x_elt-1);
@@ -123,7 +132,7 @@ int mouvement_snake(Snake *snake, char button, Map *map){
 
     case 'm':
       resultat = 0;
-      mouvement = what_is_case(map, x_elt+1, y_elt);
+      mouvement = what_is_case(map, x_elt+1, y_elt, bonus);
 
       if(mouvement == 1){
         inserer(snake->x, 0, x_elt+1);
@@ -140,7 +149,8 @@ int mouvement_snake(Snake *snake, char button, Map *map){
 
     case 'l':
       resultat = 0;
-      mouvement = what_is_case(map, x_elt, y_elt+1);
+      mouvement = what_is_case(map, x_elt, y_elt+1, bonus);
+      printf("valeur %c\n", map->data[y_elt+1][x_elt]);
 
       if(mouvement == 1){
         inserer(snake->x, 0, x_elt);
@@ -158,11 +168,12 @@ int mouvement_snake(Snake *snake, char button, Map *map){
     case 'q':
       resultat = 1;
       break;
+
     default:
-      printf("Erreur de touche.\n");
+      resultat = 0;
       break;
   }
-
+  printf("mouvement %d\n", mouvement);
   return resultat;
 }
 

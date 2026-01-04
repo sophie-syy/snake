@@ -1,8 +1,10 @@
 #ifndef SNAKE_H
 #define SNAKE_H
 
+#include <stdbool.h>
 #include "liste.h"
 #include "map.h"
+
 
 typedef struct _snake{
 	int size;
@@ -26,14 +28,15 @@ void freeSnake(Snake *snake);
 
 void init(Snake *snake);
 
-
 void write_snake(Map *map, Snake *snake);
 
 void suprime_queue(Snake *snake);
 
-int what_is_case(const Map *map, int x, int y);
+bool estBonus(Bonus *bonus, int x, int y);
 
-int mouvement_snake(Snake *snake, char button, Map *map);
+int what_is_case(const Map *map, int x, int y, Bonus *bonus);
+
+int mouvement_snake(Snake *snake, char button, Map *map, Bonus *bonus);
 
 
 #endif
