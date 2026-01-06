@@ -12,7 +12,7 @@
 int menu_principal(char *nom_fichier);
 
 /* Menu pendant le jeu */
-char menu_jeu(void);
+char menu_jeu(int position);
 
 /* Sauvegarder la partie dans save.txt */
 void sauvegarder(Snake *snake, Bonus *bonus, char *nom_map);

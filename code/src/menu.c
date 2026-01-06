@@ -45,86 +45,22 @@ int menu_principal(char *nom_fichier) {
     return MENU_QUITTER;
 }
 
-char menu_jeu(void) {
+char menu_jeu(int position) {
     char c;
-    printf("Direction (k o l m), quitter(q) sauvegarde(x): ");
+    if(position == 1){
+        printf("Direction (k o l m), quitter(q) sauvegarde(x): ");
+    }else{
+        printf("Vous voulez vraiment quitté?: \n");
+        printf("x. sauvegarder\n");
+        printf("r. recommencer\n");
+        printf("c. Choisir la carte\n");
+        printf("q. Quitter\n");
+    }
     scanf("%c", &c);
     getchar();
     return c;
 }
 
-/*char* choix_carte(char *nom_fichier){
-    int choix;
-    printf("Taille de la carte : \n");
-    printf("1. carte%dx%d\n",16,9);
-    printf("2. carte%dx%d\n",27,14);
-    printf("3. carte%dx%d\n",49,18);
-    scanf("%d", &choix);
-    getchar();
-    
-    if(choix == 1){
-        nom_fichier = "carte.txt";
-    }
-    if(choix == 2){
-        nom_fichier = "carte2.txt";
-    }
-    if(choix == 3){
-        nom_fichier = "carte3.txt";
-    }
-    return nom_fichier;
-}
-
-void commencer(Map **map, Snake **snake, Bonus **bonus, char * nom_map){
-    int choix = menu_principal(nom_map);
-
-    if (choix == MENU_QUITTER) {
-        printf("Au revoir !\n");
-    }
-
-    if (choix == MENU_NOUVEAU) {
-        *map = load_map(nom_map);
-        if (!*map) { printf("Erreur map\n"); }
-
-        *snake = create_Snake();
-        init(*snake);
-
-        *bonus = create_Bonus(*map, *snake);
-        *bonus = init_Bonus(*snake, *bonus, *map);
-    }
-
-    if (choix == MENU_CHARGER) {
-        if (!charger(&(*snake), &(*bonus), &(*map), &(*nom_map))) {
-            printf("Erreur chargement\n");
-        }
-    }
-}
-
-int menu_quitter(Map *map, Snake * snake, Bonus *bonus, char *nom_map) {
-    int c;
-    printf("Vous voulez vraiment quitté?: ");
-    printf("1. sauvegarder\n");
-    printf("2. recommencer\n");
-    printf("3. Choisir la carte\n");
-    printf("4. Quitter\n");
-    scanf("%d", &c);
-    getchar();
-    if (c == '1') {
-        sauvegarder(snake, bonus, nom_map);
-        return 0;
-    }else if (c == '2') {
-        commencer(map, snake, bonus, nom_map);
-        return 0;
-    }else if (c == '3') {
-        choix_carte(nom_map);
-        commencer(map, snake, bonus, nom_map);
-        return 0;
-    }else if (c == '4') {
-        printf("Fin de la partie\n");
-        return 1;
-    }else{
-        return menu_quitter(map, snake, bonus, nom_map);
-    }
-}*/
 
 void sauvegarder(Snake *snake, Bonus *bonus, char *nom_map) {
     FILE *f = fopen("sauvegarde/save.txt", "w");
