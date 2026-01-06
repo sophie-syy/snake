@@ -1,73 +1,78 @@
 #include <stdio.h>
+#include <stdlib.h>
 #include "map.h"
 #include "snake.h"
 #include "spawn.h"
-
-void purge(void){
-    int c = 0;
-    while ((c=getchar())!='\n' && c!= EOF);
-}
-
-int main(int argc, char *argv[]) {
-    Map *map = load_map(argv[1]);
-    Snake *snake = create_Snake();
-    Bonus * bonus = init_Bonus(snake, create_Bonus(map, snake), map);
-    int x = 0;
-    char s;
-
-    if (argc < 2) printf("Usage: %s Donner le fichier map en arguments \n", argv[0]);
-    if (map == NULL) return 1;
-    init(snake);
-
-    
-    while(x!=1){
-        /*printf("Vous voulez continué ou une nouvel? (c/n): ");
-        scanf("%c", &s);
-        purge();
-
-        if(s == 'c'){
-            map = load_map(argv[2]);
-        }*/
+#include "menu.h"
 
 
-        write_bonus(map, bonus);
-        write_snake(map, snake);
+int main(void) {
+    Map *map = NULL;
+    Snake *snake = NULL;
+    Bonus *bonus = NULL;
+    char nom_map[100] = "carte.txt";
 
-        printf("Map chargée (%dx%d) :\n", map->width, map->height);
-        print_map(map);
-        
-        printf("--------------\n");
-        
-        printf("Snake: \n");
-        afficherListe(snake->body, 0);
-        afficherListe(snake->x, 1);
-        afficherListe(snake->y, 1);
+    int choix = menu_principal(nom_map);
 
-        printf("--------------\n");
-
-        printf("pas = %d \n", bonus->pas);
-        
-        printf("score = %d \n", snake->score);
-        printf("--------------\n");
-
-        map = load_map(argv[1]);
-
-        printf("sens: ");
-        scanf("%c", &s);
-        purge();
-
-        x = mouvement_snake(snake, s, map, bonus);
-        
-        bonus = suprime_bonus(map, bonus, snake);
-        if(x == 0) bonus->pas += 1;
+    if (choix == MENU_QUITTER) {
+        printf("Au revoir !\n");
+        return 0;
     }
 
-    printf("--------------\n");
-    printf("Perdu!\n");
-    printf("score = %d \n", snake->score);
+    if (choix == MENU_NOUVEAU) {
+        printf("fichier %s\n",nom_map);
+        map = load_map(nom_map);
+        if (!map) { printf("Erreur map\n"); return 1; }
+
+        snake = create_Snake();
+        init(snake);
+
+        bonus = create_Bonus(map, snake);
+        bonus = init_Bonus(snake, bonus, map);
+    }
+
+    if (choix == MENU_CHARGER) {
+        if (!charger(&snake, &bonus, &map, nom_map)) {
+            printf("Erreur chargement\n");
+            return 1;
+        }
+    }
+    
+    int fin = 0;
+    while (!fin) {
+        write_bonus(map, bonus);
+        write_snake(map, snake);
+        printf("carte %dx%d\n", map->height, map->width);
+        print_map(map);
+
+        printf("Score : %d\n", snake->score);
+
+        char c = menu_jeu();
+
+        if (c == 'x') {
+            sauvegarder(snake, bonus, nom_map);
+            continue;
+        }
+        if (c == 'q') {
+            printf("Fin de la partie\n");
+            break;
+        }
+
+        fin = mouvement_snake(snake, c, map, bonus);
+
+        bonus = suprime_bonus(map, bonus, snake);
+        if (!fin) bonus->pas++;
+
+        free_map(map);
+        map = load_map(nom_map);
+        if (!map) { printf("Erreur map\n"); break; }
+    }
+
+    printf("Perdu ! Score final : %d\n", snake->score);
 
     freeSnake(snake);
     freeBonus(bonus);
     free_map(map);
+
     return 0;
 }

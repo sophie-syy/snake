@@ -1,6 +1,6 @@
-fichier_o = obj/map.o obj/main.o obj/noeud.o obj/liste.o obj/snake.o obj/spawn.o
+fichier_o = obj/map.o obj/main.o obj/noeud.o obj/liste.o obj/snake.o obj/spawn.o obj/menu.o
 
-all: map.o main.o noeud.o liste.o snake.o spawn.o
+all: map.o main.o noeud.o liste.o snake.o spawn.o menu.o
 	gcc $(fichier_o) -o bin/jeu
 
 map.o: src/map.c
@@ -18,8 +18,11 @@ snake.o: src/snake.c
 spawn.o: src/spawn.c
 	gcc -c src/spawn.c -Wall -Iheader -o obj/spawn.o
 
+menu.o: src/menu.c
+	gcc -c src/menu.c -Wall -Iheader -o obj/menu.o
+	
 main.o: src/main.c
 	gcc -c src/main.c -Wall -Iheader -o obj/main.o
-	
+
 clean: 
 	rm obj/*.o ; rm bin/jeu

@@ -5,7 +5,10 @@
 
 
 Map *load_map(const char *filename) {
-    FILE *file = fopen(filename, "r");
+    char fullpath[50];
+    snprintf(fullpath, sizeof(fullpath),"sauvegarde/%s", filename);
+    FILE *file = fopen(fullpath, "r");
+    
     if (file == NULL) {
         perror("Erreur d'ouverture de carte.txt");
     }

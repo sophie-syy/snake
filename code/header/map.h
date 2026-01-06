@@ -15,5 +15,4 @@ void free_map(Map *map);
 
 void print_map(Map *map);      
 
-
 #endif

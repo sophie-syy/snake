@@ -198,10 +198,6 @@ int mouvement_snake(Snake *snake, char button, Map *map, Bonus *bonus){
         resultat = 1;
       }
       break;
-      
-    case 'q':
-      resultat = 1;
-      break;
 
     default:
       resultat = 3;
@@ -211,26 +207,7 @@ int mouvement_snake(Snake *snake, char button, Map *map, Bonus *bonus){
 }
 
 
-/*
-#################################################
-#                                               #
-#                                               #
-#                                               #
-#                                               #
-#                                               #
-#                                               #
-#                                               #
-#                                               #
-#                                               #
-#                                               #
-#                                               #
-#                                               #
-#                                               #
-#                                               #
-#                                               #
-#                                               #
-#################################################
-*/
+
 
 
 
