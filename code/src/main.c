@@ -44,6 +44,9 @@ int main(void) {
         write_snake(map, snake);
         printf("carte %dx%d\n", map->height, map->width);
         print_map(map);
+        afficherListe(snake->body, 2);
+        afficherListe(snake->x, 1);
+        afficherListe(snake->y, 1);
 
         printf("Score : %d\n", snake->score);
 

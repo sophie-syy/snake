@@ -195,17 +195,18 @@ int charger(Snake **snake, Bonus **bonus, Map **map, char *nom_map) {
     // Ajouter les segments
     char b;
     int x, y;
-    for (int i = 0; i < size; i++) {
+    for (int i = 1; i <= size; i++) {
         fscanf(f, " %c ", &b);
         inserer((*snake)->body, i, b);
+        afficherListe((*snake)->body, 2);
     }
     
-    for (int k = 0; k < size; k++) {
+    for (int k = 1; k <= size; k++) {
         fscanf(f, "%d", &x);
         inserer((*snake)->x ,k, x);
     }
 
-    for (int j = 0; j < size; j++) {
+    for (int j = 1; j <= size; j++) {
         fscanf(f, "%d", &y);
         inserer((*snake)->y, j, y);
     }
