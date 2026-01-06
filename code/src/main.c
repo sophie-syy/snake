@@ -42,11 +42,9 @@ int main(void) {
     while (!fin) {
         write_bonus(map, bonus);
         write_snake(map, snake);
-        printf("carte %dx%d\n", map->height, map->width);
+        printf(" ================= carte %dx%d ================== \n", map->height, map->width);
         print_map(map);
-        afficherListe(snake->body, 2);
-        afficherListe(snake->x, 1);
-        afficherListe(snake->y, 1);
+
 
         printf("Score : %d\n", snake->score);
 
@@ -59,7 +57,8 @@ int main(void) {
                     sauvegarder(snake, bonus, nom_map);
                 }
                 if (c == 'c') {
-                    printf("Taille de la carte : \n");
+                    printf("\n");
+                    printf(" ------------- Taille de la carte ------------- \n");
                     printf("1. carte%dx%d\n",16,9);
                     printf("2. carte%dx%d\n",27,14);
                     printf("3. carte%dx%d\n",49,18);
@@ -89,6 +88,7 @@ int main(void) {
                 bonus = init_Bonus(snake, create_Bonus(map, snake), map);
             }
             if (c == 'q') {
+                printf("\n");
                 printf("Fin de la partie\n");
                 break;
             }

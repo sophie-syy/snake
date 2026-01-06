@@ -7,7 +7,8 @@
 
 int menu_principal(char *nom_fichier) {
     int choix, choix2;
-    printf("===== SNAKE =====\n");
+    printf("\n");
+    printf(" ==================== SNAKE ==================== \n");
     printf("1. Nouvelle partie\n");
     printf("2. Choisir la carte\n");
     printf("3. Partie sauvegardée\n");
@@ -17,11 +18,11 @@ int menu_principal(char *nom_fichier) {
     getchar();
 
     if (choix == 1) {
-        printf("fichier %s\n",nom_fichier);
         return MENU_NOUVEAU;
     }
     if (choix == 2) {
-        printf("Taille de la carte : \n");
+        printf("\n");
+        printf(" ------------- Taille de la carte ------------- \n");
         printf("1. carte%dx%d\n",16,9);
         printf("2. carte%dx%d\n",27,14);
         printf("3. carte%dx%d\n",49,18);
@@ -48,9 +49,10 @@ int menu_principal(char *nom_fichier) {
 char menu_jeu(int position) {
     char c;
     if(position == 1){
-        printf("Direction (k o l m), quitter(q) sauvegarde(x): ");
+        printf("Direction (k o l m), quitter(q): ");
     }else{
-        printf("Vous voulez vraiment quitté?: \n");
+        printf("\n");
+        printf(" ******** Vous voulez vraiment quitté? ********** \n");
         printf("x. sauvegarder\n");
         printf("r. recommencer\n");
         printf("c. Choisir la carte\n");
@@ -108,7 +110,7 @@ void sauvegarder(Snake *snake, Bonus *bonus, char *nom_map) {
     fprintf(f, "%d %d %d\n", bonus->x, bonus->y, bonus->pas);
 
     fclose(f);
-    printf("Sauvegarde effectuée dans save.txt\n");
+    printf(" ------------Sauvegarde effectuée--------------- \n");
 }
 
 int charger(Snake **snake, Bonus **bonus, Map **map, char *nom_map) {
