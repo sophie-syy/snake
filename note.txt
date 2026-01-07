@@ -1,0 +1,5 @@
+commande compilation de test: 
+gcc test.c -o test_sdl `sdl2-config --cflags --libs`
+
+instalation :
+sudo apt install libsdl2-dev
