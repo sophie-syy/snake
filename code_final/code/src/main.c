@@ -5,6 +5,7 @@ Fichier principal du jeu de serpent
 #include <stdio.h> //pour ecrire et lire
 #include <stdlib.h> //pour les réserves et libéres d'espace et aléatoire
 #include <string.h> //pour les fonctions str: strlen(), strcpy()
+#include <time.h> //pour utiliser time()
 
 //pour utiliser tous les fonctions qu'on a créer pour le jeu: map, serpent, bonus et menu
 #include "map.h" 
@@ -15,6 +16,7 @@ Fichier principal du jeu de serpent
 
 int main(void) {
     //initialisation des données 
+    srand(time(NULL));//initialise le nombre de secondes écoulées depuis l'époque
     Map *map = NULL;
     Snake *snake = NULL;
     Bonus *bonus = NULL;

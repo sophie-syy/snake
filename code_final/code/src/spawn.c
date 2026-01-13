@@ -1,6 +1,6 @@
-#include <time.h> //pour utiliser time()
 #include "snake.h" //pour utilisé les fonctions de serpent 
 #include "spawn.h" //et bonus et autre include dans ces fichiers
+
 
 //tableau d'alphabet
 char tab[] = {'a', 'b', 'c', 'd', 'e',
@@ -12,9 +12,6 @@ char tab[] = {'a', 'b', 'c', 'd', 'e',
 
 /*créer le bonus aléatoire*/
 Bonus* create_Bonus(Map *map, Snake * snake){
-    //initialise le nombre de secondes écoulées depuis l'époque
-    srand(time(NULL));
-
     //crée un espace
     Bonus *bonus = malloc(sizeof(Bonus));
     bonus->letter = tab[rand() % 26]; //aléatoire entre 0 et 25
@@ -34,6 +31,7 @@ Bonus * init_Bonus(Snake * snake, Map *map){
     while(belongs_snake(snake, x, y) || map->data[y][x] == '#') {
         freeBonus(bonus);
         bonus = create_Bonus(map, snake);
+        x = bonus->x, y = bonus->y;
     }
     return bonus;
 }
