@@ -1,5 +1,5 @@
 Installation(s) de(s) bibliothèque(s) pour le jeu:
-sudo apt install libsdl2-dev
+aucun
 
 Pour lancer le jeu:
 aller dans: /code_terminal
