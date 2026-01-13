@@ -27,14 +27,15 @@ Bonus* create_Bonus(Map *map, Snake * snake){
 }
 
 /*initialiser le bonus, pour qu'il n'est pas sur le mur ni sur le serpent*/
-Bonus * init_Bonus(Snake * snake, Bonus *bonus, Map *map){
-int x = bonus->x, y = bonus->y;
-    //tant que la case du bonus appartient au serpent ou au mur, libérer le bonus et recréer un autre
-  while(belongs_snake(snake, x, y) || map->data[y][x] == '#') {
-    freeBonus(bonus);
-    bonus = create_Bonus(map, snake);
-  }
-  return bonus;
+Bonus * init_Bonus(Snake * snake, Map *map){
+    Bonus * bonus = create_Bonus(map, snake);
+    int x = bonus->x, y = bonus->y;
+    //tant que la case du bonus appartient au serpent ou au mur, recréer un autre
+    while(belongs_snake(snake, x, y) || map->data[y][x] == '#') {
+        freeBonus(bonus);
+        bonus = create_Bonus(map, snake);
+    }
+    return bonus;
 }
 
 /*libèrer le bonus*/
@@ -49,10 +50,10 @@ void write_bonus(Map *map, Bonus * bonus){
 
 /*suprimer le bonus*/
 Bonus* delete_bonus(Map *map, Bonus *bonus, Snake * snake){
-    //suprime seulement si le nombre de pas égale à 10 pas, libére le bonus et crée
+    //suprime seulement si le nombre de pas égale à 10 pas, et crée
     if(bonus->footsteps >= 10){
         freeBonus(bonus);
-        bonus = init_Bonus(snake, create_Bonus(map, snake), map);
+        bonus = init_Bonus(snake, map);
     }
     return bonus;
 }

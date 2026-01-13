@@ -7,7 +7,7 @@
 
 Bonus* create_Bonus(Map *map, Snake * snake); /*créer le bonus aléatoire*/
 
-Bonus * init_Bonus(Snake * snake, Bonus *bonus, Map *map); /*initialiser le bonus*/
+Bonus * init_Bonus(Snake * snake, Map *map); /*initialiser le bonus*/
 
 void freeBonus(Bonus *bonus); /*libèrer le bonus*/
 

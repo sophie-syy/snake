@@ -34,9 +34,7 @@ int main(void) {
 
         snake = create_Snake();//créer le sepent
         init_snake(snake); //initialiser a 'z'
-
-        bonus = create_Bonus(map, snake); //créer le bonus
-        bonus = init_Bonus(snake, bonus, map); //vérifier qu'il est bien créé dans une place vide
+        bonus = init_Bonus(snake, map); //créer le bonus
     }
 
     if (choix == MENU_LOAD) {
@@ -102,7 +100,7 @@ int main(void) {
                 //recréer les données, et les initialisations
                 snake = create_Snake();
                 init_snake(snake);
-                bonus = init_Bonus(snake, create_Bonus(map, snake), map);
+                bonus = init_Bonus(snake, map);
             }
 
             //sûr et certin de quitter
