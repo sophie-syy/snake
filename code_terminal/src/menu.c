@@ -1,12 +1,12 @@
 #include "menu.h"
 
-/*vider le scanf tant qu'il a '\n' ou EOF avec getchar()*/
+/* Vider le scanf tantque il y a '\n' ou EOF avec getchar() */
 void purge(void){
     int c = 0;
     while ((c=getchar())!='\n' && c!= EOF);
 }
 
-/* afficher le Menu principal */
+/* Afficher le Menu principal */
 int menu_principal(char *name_fichier) {
     int choix, choix2;
     printf("\n");
@@ -19,11 +19,11 @@ int menu_principal(char *name_fichier) {
     scanf("%d", &choix);
     purge();
 
-    //pour dire lancer le jeu: MENU_NEW
+    // Pour dire lancer le jeu: MENU_NEW
     if (choix == 1) {
         return MENU_NEW;
     }
-    //pour changer le nom fichier du carte, ensuite dire lancer le jeu: MENU_NEW
+    // Pour changer le nom fichier du carte, ensuite dire lancer le jeu: MENU_NEW
     if (choix == 2) {
         printf("\n");
         printf(" ------------- Taille de la carte ------------- \n");
@@ -33,7 +33,7 @@ int menu_principal(char *name_fichier) {
         scanf("%d", &choix2);
         purge();
 
-        //changer le nom du fichier selon le choix du jouer
+        // Changer le nom du fichier selon le choix du jouer
         if(choix2 == 1){
             strcpy(name_fichier, "carte.txt");
         }
@@ -45,7 +45,7 @@ int menu_principal(char *name_fichier) {
         }
         return MENU_NEW;
     }
-    //pour dire lancer le sauvegarde:MENU_LOAD
+    // Pour dire lancer le sauvegarde: MENU_LOAD
     if (choix == 3) {
         return MENU_LOAD;
     }
@@ -55,7 +55,7 @@ int menu_principal(char *name_fichier) {
 /* Menu pendant le jeu */
 char menu_direc_leave(int position) {
     char c;
-    //si c'est 1, il demande la direction, sinon il affiche le menu de quitte
+    // Si c'est 1, il demande la direction, sinon il affiche le menu de quitte
     if(position == 1){
         printf("Direction (k o l m), quitter(q): ");
     }else{
@@ -71,28 +71,28 @@ char menu_direc_leave(int position) {
     return c;
 }
 
-/* Sauvegarder la partie dans save.txt */
+/* Sauvegarder la partie dans "save.txt" */
 void save(Snake *snake, Bonus *bonus, char *name_map) {
-    //ouvrir le fichier qui sauvegarde les données en seul ecriture
+    // Ouvre le fichier de sauvegarde et lis les données du fichier en écriture seule
     FILE *f = fopen("sauvegarde/save.txt", "w");
-    if (!f) { printf("Erreur ouverture save.txt\n"); return; } //teste erreur d'ouverture
+    if (!f) { printf("Erreur ouverture save.txt\n"); return; } // teste l'erreur d'ouverture
 
-    //ECRIRE LES DONNÉES DANS LE FICHIER SAVE.TXT(sauvegarde dans une ordre précise pour la suite de relire)
+    // ECRIRE LES DONNÉES DANS LE FICHIER SAVE.TXT(sauvegarde dans une ordre précise pour la suite de relire)
 
-    fprintf(f, "%s\n", name_map); //nom du fichier de niveau
-    fprintf(f, "%d\n", snake->score); //le score
-    fprintf(f, "%d\n", snake->size);//la taille du serpent
+    fprintf(f, "%s\n", name_map); // Nom du fichier de niveau
+    fprintf(f, "%d\n", snake->score); // Le score
+    fprintf(f, "%d\n", snake->size);// La taille du serpent
 
-    // sauvegarde des segments
-    //serpent
+    // Sauvegarde des segments
+    // Serpent
     Noeud *nb = snake->body->sentNext->suiv;//
     while (nb->cont.c != 0) {
         fprintf(f, " %c ", nb->cont.c);
         nb = nb->suiv;
     }
-    fprintf(f, "\n"); //pour la beauté de lecture dans save.txt
+    fprintf(f, "\n"); // Pour la beauté de lecture dans save.txt
 
-    //coordonnée x
+    // Coordonnée x
     Noeud *nx = snake->x->sentNext->suiv;
     while (nx->cont.i != 0) {
         fprintf(f, "%d ", nx->cont.i);
@@ -100,7 +100,7 @@ void save(Snake *snake, Bonus *bonus, char *name_map) {
     }
     fprintf(f, "\n");
 
-    //coordonnée y
+    // Coordonnée y
     Noeud *ny = snake->y->sentNext->suiv;
     while (ny->cont.i != 0) {
         fprintf(f, "%d ", ny->cont.i);
@@ -111,7 +111,7 @@ void save(Snake *snake, Bonus *bonus, char *name_map) {
     // Sauvegarde du bonus
     fprintf(f, "%d %d %d\n", bonus->x, bonus->y, bonus->footsteps);
 
-    fclose(f);//fermer le fichier save
+    fclose(f);// Fermer le fichier save
     printf(" ------------Sauvegarde effectuée--------------- \n");
 }
 
@@ -122,27 +122,27 @@ int load_save(Snake **snake, Bonus **bonus, Map **map, char *name_map) {
     //teste erreur d'ouverture
     if (!f) return 0;
 
-    //RECUPÉRER LES DONNÉES (il lit dans une ordre précise)
-    // changer le nom de fichier par la carte de sauvegarde
+    // RECUPÉRER LES DONNÉES (il lit dans une ordre précise)
+    // Renommer le nom du fichier par la carte de sauvegarde
     fscanf(f, "%s", name_map);
-    //charger la map
+    // Charger la carte
     *map = load_map(name_map);
 
-    //prendre le score et taille
+    // Prendre le score et taille
     int score, size;
     fscanf(f, "%d", &score);
     fscanf(f, "%d", &size);
 
-    //créer le serpent et charger les informations
+    // Créer le serpent et charger les infordmations
     *snake = create_Snake();
     (*snake)->score = score;
     (*snake)->size = size;
 
     // Ajouter au fur et à mesure les lettres du corps et ces coordonnées
-    //prendre puis inserte
+    // Prendre puis inserte
     Elt b, x, y;
     for (int i = 1; i <= size; i++) {
-        fscanf(f, " %c ", &b.c); // un espace précise devant pour qu'il ignore les espaces a la suite
+        fscanf(f, " %c ", &b.c); // Un espace précise devant pour qu'il ignore les espaces à la suite
         insert((*snake)->body, i, b);
     }
     
@@ -156,15 +156,15 @@ int load_save(Snake **snake, Bonus **bonus, Map **map, char *name_map) {
         insert((*snake)->y, j, y);
     }
     
-    // récupérer les informations du bonus
+    // Récupérer les informations du bonus
     int bx, by, footsteps;
     fscanf(f, "%d %d %d", &bx, &by, &footsteps);
-    //créer et charger le bonus
+    // Créer et charger le bonus
     *bonus = create_Bonus(*map, *snake);
     (*bonus)->x = bx;
     (*bonus)->y = by;
     (*bonus)->footsteps = footsteps;
 
-    fclose(f);//fermeture du fichier save
+    fclose(f); // Fermeture du fichier save
     return 1;
 }

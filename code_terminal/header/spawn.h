@@ -5,16 +5,14 @@
 #include "snake.h"
 
 
-Bonus* create_Bonus(Map *map, Snake * snake); /*créer le bonus aléatoire*/
+Bonus* create_Bonus(Map *map, Snake * snake); /* Créer le bonus aléatoire */
 
-Bonus * init_Bonus(Snake * snake, Map *map); /*initialiser le bonus*/
+Bonus * init_Bonus(Snake * snake, Map *map); /* Initialise le bonus */
 
-void freeBonus(Bonus *bonus); /*libèrer le bonus*/
+void freeBonus(Bonus *bonus); /* Libèrer la mémoire du bonus */
 
-void write_bonus(Map *map, Bonus * bonus); /*Ecrire le bonus sur la map*/
+void write_bonus(Map *map, Bonus * bonus); /* Ecrire le bonus sur la carte */
 
-Bonus* delete_bonus(Map *map, Bonus *bonus, Snake * snake); /*suprimer le bonus*/
-
-
+Bonus* delete_bonus(Map *map, Bonus *bonus, Snake * snake); /* Supprimer le bonus */
 
 #endif

@@ -1,37 +1,38 @@
 #include "liste.h"
 
-/*créer une liste [0, 0]*/
+/* Créer une liste [0, 0] */
 Liste* create_Liste(){
-    Liste *l = malloc(sizeof(Liste));
-    //créer les sentinelles
-    l->sentNext = create_Sent();
-    l->sentBack = create_Sent();
-    //relier le sentinelle avant et le dernier
-    changeNext(l->sentNext, l->sentBack);
+    Liste *l = malloc(sizeof(Liste)); // Alloue de la mémoire pour liste
+
+    /* Créer les sentinelles */
+    l->sentNext = create_Sent(); // Sentinelle avant
+    l->sentBack = create_Sent(); // Sentinelle arrière
+
+    changeNext(l->sentNext, l->sentBack); // Relier le sentinelle avant et le arrière
     return l;
 }
 
-/*libèrer la liste, libérer chaque noeud de la liste puis la liste,
- pour pas perdre les noeuds avant*/
+// Libère la mémoire de la liste
+/* Libére la mémoire de chaque noeud de la liste, puis de la liste pour ne pas perdre les noeuds avant */
 void freeListe(Liste* l){
-    //première noeud
+    // Première noeud
     Noeud *n = l->sentNext;
-    //tant qu'il y a un noeud, libére, et passe au suivant
+    // Tantque il y a un noeud, libérer et passe aux suivant
     while(n != NULL){
-        l->sentNext = n->suiv;//pour pas perdre le noeud suivant
-        freeNoeud( n );
+        l->sentNext = n->suiv; // Pour pas perdre le noeud suivant
+        freeNoeud( n ); // Libérer le noeud
         n = l->sentNext;
     }
     free(l);
 }
 
-/*chercher l'ième noeud*/
+/* Chercher l'ième noeud */
 Noeud* ithNoeud(Liste* l, int i){
-    int j = 0;
-    Noeud* res;
+    int j = 0; // Initialise j
+    Noeud* res; 
     res = l->sentNext;
 
-    //chercher tant que il y a un noeud et au ième
+    // Chercher tant que il y a un noeud et au ième
     while(res != NULL && j < i){ 
         res = res->suiv;
         j++;
@@ -39,25 +40,25 @@ Noeud* ithNoeud(Liste* l, int i){
     return res;
 }
 
-/*chercher le contenu l'ième noeud*/
+/* Chercher le contenu l'ième noeud */
 Elt ithElt(Liste* l, int i){
     return (content(ithNoeud(l, i)));
 }
 
-/*inserer dans l'ième place un noeud*/
+/* Inserer dans l'ième place un noeud */
 void insert(Liste *l, int i, Elt e){
-    Noeud* prec = ithNoeud(l,i-1); //noeud précédent
-    // créer et accrocher le noeud au précédent
+    Noeud* prec = ithNoeud(l,i-1); // Noeud précédent
+    // Créer et pointer le noeud aux précédent
     Noeud *n = create_Noeud(e, next(prec)); 
     changeNext(prec, n);
 }
 
-/*suprimer l'ième noeud*/
+/* Supprimer l'ième noeud */
 void delete(Liste *l, int i){
-    if (l == NULL) {exit(EXIT_FAILURE);}//teste de vide
+    if (l == NULL) {exit(EXIT_FAILURE);} // Si c'est vide, il sort et affiche une erreur 
 
-    Noeud* prec = ithNoeud(l,i-1);//noeud précédent
-    Noeud *n = next(prec);//noeud suivant
-    changeNext(prec,next(n)); //accrocher le noeud suivant au précédent 
-    freeNoeud( n );//libérer
+    Noeud* prec = ithNoeud(l,i-1); // Noeud précédent
+    Noeud *n = next(prec); // Noeud suivant
+    changeNext(prec,next(n)); // Pointer le noeud suivant au précédent 
+    freeNoeud( n ); // Libérer
 }
