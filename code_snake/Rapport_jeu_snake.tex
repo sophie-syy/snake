@@ -1,0 +1,1668 @@
+\documentclass[12pt,a4paper]{article}
+
+% Packages essentiels
+\usepackage[utf8]{inputenc}
+\usepackage[T1]{fontenc}
+\usepackage[french]{babel}
+\usepackage{graphicx}
+\usepackage{geometry}
+\usepackage{listings}
+\renewcommand{\lstlistingname}{}
+\usepackage{pgfgantt}
+\usepackage{xcolor}
+\usepackage{tikz}
+\usepackage{hyperref}
+
+\geometry{margin=2.5cm}
+\usepackage{float}
+
+\usetikzlibrary{patterns,patterns.meta}
+
+\definecolor{michelred}{RGB}{220,30,30}
+\definecolor{sophiegray}{RGB}{90,90,90}
+\definecolor{jinnyblue}{RGB}{20,50,130}
+
+
+\lstset{
+	language=C,
+	basicstyle=\ttfamily\footnotesize,
+	numbers=left,
+	numberstyle=\tiny,
+	stepnumber=1,
+	breaklines=true,
+	frame=single,
+	tabsize=2,
+	commentstyle=\color{gray},
+	keywordstyle=\color{blue},
+	stringstyle=\color{red},
+	showstringspaces=false
+	inputencoding=utf8,
+	extendedchars=true,
+	literate=
+	{é}{{\'e}}1
+	{è}{{\`e}}1
+	{ê}{{\^e}}1
+	{à}{{\`a}}1
+	{ù}{{\`u}}1
+	{ç}{{\c{c}}}1
+	{ô}{{\^o}}1
+	{î}{{\^i}}1
+	{'}{{'}}1
+}
+
+
+
+\title{Projet Jeu Snake}
+\author{Vayaboury Michel, Su Sophie, Li Jinny \\ Licence Informatique}
+\date{Année universitaire 2025-2026}
+
+\begin{document}
+	
+	\maketitle
+	\newpage
+	
+	\tableofcontents
+	\newpage
+	
+	% -------------------
+	\section{Introduction}
+	\vspace{0.5cm}
+	\subsection{Problématique}
+	Le projet consiste à concevoir et implémenter un jeu Snake en langage C.  
+	La problématique principale est de gérer le déplacement dynamique d’un serpent sur une grille de jeu, tout en assurant la cohérence de son corps, la génération de nourriture, la détection des collisions et l’interaction avec l’utilisateur en temps réel.
+	
+	Ce type de jeu, bien que simple en apparence, pose plusieurs défis techniques, notamment la gestion de structures de données, la synchronisation entre la logique du jeu et l’affichage, ainsi que la gestion correcte des entrées utilisateur.
+	
+	% -------------------
+	\vspace{0.5cm}
+	\subsection{Contexte et cadre du projet}
+	Ce projet s’inscrit dans le cadre de la licence informatique de deuxième années et a pour objectif de mettre en pratique les notions fondamentales de programmation vues en cours, en particulier en langage C.  
+	Il mobilise des compétences liées à la structuration du code, à la gestion de la mémoire, à l’utilisation de structures de données et à la conception d’un programme modulaire.
+	
+	Le projet a été réalisé en groupe, ce qui a nécessité une organisation du travail en équipe, une répartition des tâches entre nous et une coordination entre les différents personnes.  
+	L’environnement de développement du projet utilisé est basé sur un système Linux (Ubuntu).
+	
+	% -------------------
+	\vspace{0.5cm}
+	\subsection{Objectif final du projet}
+	L’objectif final du projet est de concevoir un jeu Snake fonctionnel en langage C, exécuté dans un terminal sous environnement Linux.
+	
+	Le jeu doit permettre :
+	\begin{itemize}
+		\item le déplacement du serpent dans les quatre directions,
+		\item la génération et la consommation de nourriture,
+		\item l’augmentation progressive de la taille du serpent,
+		\item la détection des collisions avec les murs ou le corps du serpent,
+		\item la fin de la partie en cas de collision.
+	\end{itemize}
+	
+	L’affichage du jeu est réalisé dans le terminal et aussi avec une interface graphique externe comme SDL.
+	
+	
+	
+	
+	% -------------
+	\newpage
+	
+	\section{Diagramme de Gantt}
+	\vspace{0.5cm}
+	
+	\noindent\textbf{Légende :}\quad
+	\begin{tikzpicture}[baseline=-0.5ex]
+		\fill[michelred!35] (0,0) rectangle (0.5,0.25);
+		\draw[draw=michelred, line width=0.9pt] (0,0) rectangle (0.5,0.25);
+		\draw[pattern=north east lines, pattern color=michelred] (0,0) rectangle (0.5,0.25);
+	\end{tikzpicture}
+	\ Michel \quad
+	\begin{tikzpicture}[baseline=-0.5ex]
+		\fill[sophiegray!55] (0,0) rectangle (0.5,0.25);
+		\draw[draw=sophiegray, line width=0.9pt] (0,0) rectangle (0.5,0.25);
+		\draw[pattern=horizontal lines, pattern color=black] (0,0) rectangle (0.5,0.25);
+	\end{tikzpicture}
+	\ Sophie \quad
+	\begin{tikzpicture}[baseline=-0.5ex]
+		\fill[jinnyblue!25] (0,0) rectangle (0.5,0.25);
+		\draw[draw=jinnyblue, line width=0.9pt] (0,0) rectangle (0.5,0.25);
+		\draw[pattern=crosshatch, pattern color=jinnyblue] (0,0) rectangle (0.5,0.25);
+	\end{tikzpicture}
+	\ Jinny
+	
+	
+	
+	
+	\vspace{1.0cm}
+	\usetikzlibrary{patterns.meta}
+	\definecolor{michelred}{RGB}{220,30,30}
+	\definecolor{sophiegray}{RGB}{90,90,90}
+	\definecolor{jinnyblue}{RGB}{20,50,130}
+	
+	\ganttset{
+		michel/.style={
+			bar/.append style={
+				draw=michelred,
+				line width=0.9pt,
+				fill=michelred!35,      
+				pattern=north east lines,
+				pattern color=michelred 
+			}
+		},
+		sophie/.style={
+			bar/.append style={
+				draw=sophiegray,
+				line width=1.1pt,
+				fill=sophiegray!55,
+				pattern=horizontal lines,
+				pattern color=black
+			}
+		},
+		jinny/.style={
+			bar/.append style={
+				draw=jinnyblue,
+				line width=0.8pt,
+				fill=jinnyblue!25,
+				pattern=crosshatch,
+				pattern color=jinnyblue
+			}
+		}
+	}
+	
+	\begin{ganttchart}[
+		hgrid,
+		vgrid,
+		x unit=0.55cm,
+		y unit chart=0.65cm,
+		y unit title=0.8cm,
+		title height=1,
+		bar height=0.55,
+		bar label font=\small,
+		]{1}{12}
+		
+		
+		grid/.style={draw=black!25},
+		vgrid/.style={draw=black!25, dotted},
+		hgrid/.style={draw=black!25, dotted},
+		
+		
+		% ----- Titre du haut -----
+		\gantttitle{Semaines}{12} \\
+		\gantttitle{1}{2}\gantttitle{2}{2}\gantttitle{3}{2}\gantttitle{4}{2}\gantttitle{5}{2}\gantttitle{6}{2} \\
+		
+		% ===== CARTE =====
+		\ganttbar[michel]{Carte}{1}{3}
+		\ganttbar[sophie]{}{10}{10} \\
+		
+		% ===== SERPENT =====
+		\ganttbar[michel]{Serpent}{3}{6}
+		\ganttbar[sophie]{}{3}{6}
+		\ganttbar[sophie]{}{9}{9}
+		\ganttbar[jinny]{}{3}{3}
+		\ganttbar[jinny]{}{10}{10} \\
+		
+		
+		% ===== BONUS =====
+		\ganttbar[sophie]{Bonus}{9}{10}
+		\ganttbar[jinny]{}{7}{8} \\
+		
+		
+		% ===== MENU =====
+		\ganttbar[michel]{Menu}{9}{10}
+		\ganttbar[sophie]{}{9}{10} \\
+		
+		% ===== SDL =====
+		\ganttbar[michel]{SDL}{10}{12}
+		\ganttbar[sophie]{}{10}{12} \\
+		
+		% ===== LaTeX =====
+		\ganttbar[jinny]{LaTeX}{8}{12} \\
+		
+	\end{ganttchart}
+	
+	
+	
+	
+	% -------------------
+	\vspace{1.0cm}
+	
+	\section{Conception}
+
+	\subsection{Résolution du problème}
+	Pour résoudre le problème posé, le jeu a été conçu autour d’une boucle principale assurant le bon déroulement de la partie.  
+	Cette boucle permet de gérer successivement la lecture des entrées utilisateur, la mise à jour de la position du serpent, la vérification des collisions et l’actualisation de l’affichage.
+
+	La logique du jeu repose sur une représentation du serpent comme une suite de segments positionnés sur une grille. À chaque déplacement, la tête avance dans une direction donnée et le reste du corps suit ce mouvement.
+
+	% -------------------
+	\vspace{0.5cm}
+	\subsection{Choix techniques et structures de données}
+	
+	Le jeu a été implémenté en langage C en utilisant un affichage en mode terminal.  
+	Ce choix permet de se concentrer sur les mécanismes internes du jeu sans dépendre d’une bibliothèque graphique externe.
+	
+	Le serpent est représenté par une structure de données composée de plusieurs nœuds.  
+	Chaque nœud correspond à un segment du corps du serpent et contient ses coordonnées sur la carte de jeu.  
+	Cette représentation permet une gestion dynamique de la taille du serpent lors de la consommation de nourriture.
+	
+	Le projet est organisé de manière modulaire, avec plusieurs fichiers source et fichiers d’en-tête, chacun étant responsable d’une fonctionnalité précise (gestion du serpent, de la carte, du menu, de la génération des éléments).
+	
+	% -------------------
+	\vspace{0.5cm}
+	\subsection{Priorités et hypothèses}
+	Les priorités du projet ont été définies afin d’assurer un fonctionnement correct du jeu avant toute amélioration visuelle ou fonctionnelle.  
+	La priorité principale a été donnée à la stabilité du jeu, à la gestion correcte des déplacements et à la détection des collisions.
+	
+	Certaines hypothèses ont été posées pour simplifier la conception, notamment :
+	\begin{itemize}
+		\item une taille de grille fixe(la carte),
+		\item le déplacement,
+		\item l’absence de niveaux de difficulté dans la version initiale.
+	\end{itemize}
+	
+	
+	% -------------------
+	\section{Implémentation}
+	
+	\subsection{Langage et outils}
+	Le jeu a été développé en langage C sous Ubuntu. L’affichage est réalisé en mode terminal
+	
+	
+	\newpage
+	\subsection{Explication de chaque code}
+	
+	
+	\vspace{0.5cm}
+	\begin{lstlisting}[
+		caption={Fichier \texttt{liste.h}},
+		captionpos=t
+	]
+		
+	#ifndef LISTE_H_INCLUDED
+	#define LISTE_H_INCLUDED
+	
+	#include "noeud.h" // Permet d'utiliser le type Noeud, Elt et les fonctions déclarées dans noeud.h
+		
+		
+	// Structure représentant une liste chaînée avec deux pointeurs "sentinelles" :
+	typedef struct _liste{ 
+		Noeud *sentNext; // - sentNext : pointe vers le début (avant) de la liste
+		Noeud *sentBack; // - sentBack : pointe vers la fin (arrière) de la liste
+	} Liste;
+		
+	Liste* create_Liste(); /* Créer une liste [0, 0] */
+		
+	void freeListe(Liste* l); /* Libère toute la mémoire associée à la liste (noeuds + structure Liste). */
+		
+	Noeud* ithNoeud(Liste* l, int i); /* Renvoie un pointeur vers le noeud situé à la position i dans la liste. */
+		
+	Elt ithElt(Liste* l, int i); /* Renvoie l'élément (contenu) stocké dans le noeud situé à la position i. */
+		
+	void insert(Liste *l, int i, Elt e); /* Insère l'élément e à laposition i dans la liste */
+		
+	void delete(Liste *l, int i); /* Supprime le noeud situé à la position i */
+		
+	#endif 
+	\end{lstlisting}
+	
+	\newpage
+	\vspace{0.5cm}
+	\begin{lstlisting}[
+		caption={Fichier \texttt{map.h}},
+		captionpos=t
+	]
+	
+	#ifndef MAP_H
+	#define MAP_H
+	#define LIRE 1024
+	
+	#include <stdio.h>
+	#include <stdlib.h>
+	#include <string.h>
+	
+	// Structure représentant une carte (la grille):
+	typedef struct _map{ 
+		char **data; // - data: tableau de lignes (chaînes de caractères), chaque ligne représente une rangée de la carte  
+		int width; // - width: largeur de la carte (nombre de colonnes)
+		int height; // - height: hauteur de la carte (nombre de lignes)
+	} Map;
+	
+	Map *load_map(const char *filename); /* Lire le fichier de carte.txt et remplie la grille de la carte et initialise width et height */
+	
+	void free_map(Map *map); /* Libère toute la mémoire associée à la carte (lignes + structure Map). */
+	
+	void print_map(Map *map); /* affichier la carte dans la console */
+	
+	#endif
+	
+	
+	\end{lstlisting}
+	
+	\newpage
+	\vspace{0.5cm}
+	\begin{lstlisting}[
+		caption={Fichier \texttt{menu.h}},
+		captionpos=t
+		]
+		
+	#ifndef MENU_H
+	#define MENU_H
+	
+	#include "spawn.h"
+	
+	/* Codes menu principal */
+	#define MENU_LEAVE 0 // - MENU_LEAVE: quitter le programme
+	#define MENU_NEW 1 // - MENU_NEW: lancer une nouvelle partie
+	#define MENU_LOAD 2 // - MENU_LOAD: charger une partie qui est sauvegardée
+	
+	void purge(void); /* Vider un scanf de '\n', pour éviter des lectures incorrectes.*/
+	
+	int menu_principal(char *nom_fichier); /* Affiche le menu principal du jeu et met à jour le nom du fichier de carte si nécessaire */
+	
+	char menu_direc_leave(int position); /* Affiche le menu pendant le jeu */
+	// position : option actuellement sélectionnée
+	
+	void save(Snake *snake, Bonus *bonus, char *nom_map); /* Sauvegarder l'état actuel de la partie dans le fichier "save.txt":
+	snake: - position et état du snake
+	bonus: - bonus présents
+	nom_map: -nom de la carte utilisée */
+	
+	int load_save(Snake **snake, Bonus **bonus, Map **map, char* nom_map); 
+	/* Charge une partie depuis le fichier "save.txt" (initialise: snake, bonus et la carte + met à jour le nom de la carte)*/
+	
+	#endif
+		
+	
+	\end{lstlisting}
+	
+	\newpage
+	\vspace{0.5cm}
+	\begin{lstlisting}[
+		caption={Fichier \texttt{noeud.h}},
+		captionpos=t
+		]
+		
+	#ifndef NOEUD_H_INCLUDED
+	#define NOEUD_H_INCLUDED
+	
+	#include <stdio.h>
+	#include <stdlib.h>
+	
+	// Structure de Elt qui contient: un caractère(c) et un entier(i).
+	typedef struct _elt{
+		char c;
+		int i;
+	}Elt;
+	
+	typedef struct _noeud Noeud; // Renommé _noeud à Noeud
+	
+	// Structure de noeud qui contient :
+	struct _noeud{ 
+		Elt cont; // - cont : donnée stockée dans le noeud
+		int sent; // - sent : indique si le noeud est une sentinelle
+		Noeud *suiv; // - suiv : pointeur vers le noeud suivant
+	};
+	
+	Noeud* create_Noeud(Elt e, Noeud* n); /* Créer un noeud */
+	
+	void freeNoeud(Noeud* n);/* Libèrer la mémoire d'un noeud*/
+	
+	Noeud* create_Sent();/* Créer un noued sentinelle */
+	
+	Noeud* next(Noeud* n);/* Renvoie le pointeur vers le noeud suivant */
+	
+	Elt content(Noeud *n);/* Renvoie l'élément (la donnée) dans le noeud.*/
+	
+	void changeNext(Noeud * n, Noeud * p);/* Relie deux noeuds ensemble */
+	// Le noeud n pointera désormais vers p comme noeud suivant.
+	
+	#endif
+	
+	
+	\end{lstlisting}
+	
+	\vspace{1.0cm}
+	\begin{lstlisting}[
+		caption={Fichier \texttt{snake.h}},
+		captionpos=t
+		]
+		
+	#ifndef SNAKE_H
+	#define SNAKE_H
+	
+	#include <stdbool.h>
+	#include "liste.h" // Permet d'utiliser le type Liste et les fonctions associées
+	#include "map.h" // Permet d'utiliser le type Map et les fonctions associées
+	
+	#define NB_VOWEL 6 //nombre de voyelle
+	
+	//structure de snake: taille, corps, les coordonnées x et y du corps, et le score
+	typedef struct _snake{
+		int size; // - size  : taille du serpent
+		Liste *body; // - body  : liste représentant le corps
+		Liste *x; // Cordonnées x
+		Liste *y; // Cordonnées y
+		int score; // - score: score actuel du joueur
+	} Snake;
+	
+	// Structure de bonus:
+	typedef struct _bonus{ 
+		char letter; // Les lettres
+		int x; // Cordonnés x de la lettre
+		int y; // Cordonnés y de la lettre
+		int footsteps; // Le nombre de pas du serpent
+	} Bonus;
+	
+	
+	Snake* create_Snake(); /*Créer le serpent (vide + réserver des places) */
+	
+	void freeSnake(Snake *snake); /* Libèrer la mémoire du serpent */
+	
+	void init_snake(Snake *snake); /* Initialiser le serpent */
+	
+	void write_snake(Map *map, Snake *snake); /* Ecrire le serpent dans la carte */
+	
+	void delete_queue(Snake *snake); /* Supprimer que les coordonnées de la queue */
+	
+	bool is_Bonus(Bonus *bonus, int x, int y); /* Booléen pour dire si la case du coordonnée x et y de la carte est un bonus ou non */
+	
+	bool belongs_vowel(Bonus *bonus); /* Booléen pour dire si le bonus est une voyelle ou pas */
+	
+	void eat_insert(Snake *snake, Bonus* bonus, Map *map); /* Manger le bonus */
+	
+	bool belongs_snake(Snake* snake, int x, intl y); /* Booléen pour dire si la case du coordonnée x et y de la carte est le corps du serpent ou non */
+	
+	int case_next(Map *map, int x, int y, Bonus *bonus, Snake *snake); /* Voir la case du coordonnée x et y*/
+	
+	int mouvement_snake(Snake *snake, char button, Map *map, Bonus *bonus); /* Définir le mouvement du serpent selon le touche entrée(boutton)*/
+	
+	
+	#endif
+	
+		
+	\end{lstlisting}
+	
+	\newpage
+	\vspace{0.5cm}
+	\begin{lstlisting}[
+		caption={Fichier \texttt{spawn.h}},
+		captionpos=t
+		]
+	
+	#ifndef SPAWN_H
+	#define SPAWN_H
+	
+	
+	#include "snake.h"
+	
+	
+	Bonus* create_Bonus(Map *map, Snake * snake); /* Créer le bonus aléatoire */
+	
+	Bonus * init_Bonus(Snake * snake, Map *map); /* Initialise le bonus */
+	
+	void freeBonus(Bonus *bonus); /* Libèrer la mémoire du bonus */
+	
+	void write_bonus(Map *map, Bonus * bonus); /* Ecrire le bonus sur la carte */
+	
+	Bonus* delete_bonus(Map *map, Bonus *bonus, Snake * snake); /* Supprimer le bonus */
+	
+	
+	/*Supplément pour le jeu snake en SDL*/
+	bool belongs_lettrer(char variable);/*chercher si variable appartient à l'alphabet*/
+	
+	#endif
+	
+    \end{lstlisting}
+  
+    
+	\vspace{1.0cm}
+	\begin{lstlisting}[
+		caption={Fichier \texttt{map.c}},
+		captionpos=t
+		]
+		
+	#include "map.h"
+	
+	// Lire le fichier de "carte.txt" et remplie la matrice de la carte et ses tailles 
+	Map *load_map(const char *filename) {
+		char fullpath[50]; // Tableau pour mettre le chemin des "fichiers .txt"
+		snprintf(fullpath, sizeof(fullpath),"sauvegarde/%s", filename); // Mettre dans le tableau le dossier, et le nom du fichier donnée
+		FILE *file = fopen(fullpath, "r"); // Ouverir le fichier en seule lecture
+		
+		// Teste d'erreur d'ouverture
+		if (file == NULL) {
+			perror("Erreur d'ouverture de carte.txt");
+		}
+		// Réserver(alloue) une place de taille de carte
+		Map *map = malloc(sizeof(Map));
+		// Initialisation des données de la carte
+		map->data = NULL;
+		map->width = 0;
+		map->height = 0;
+		
+		// Tableau pour mettre les caractères lue
+		char buffer[1024];
+		
+		// tant qu'il peut lire, il lit la ligne entier
+		while (fgets(buffer, sizeof(buffer), file)) {
+			int len = strlen(buffer); // La taille des caractères lue d'une ligne, donc c'est la longueur
+			
+			// Si le dernier caractère lue est à la ligne, change en \0 (fin sans saute de ligne)
+			if (buffer[len - 1] == '\n')  
+			buffer[len - 1] = '\0';
+			
+			// Mettre à jour la hauteur de la carte
+			if (map->width == 0)
+			map->width = strlen(buffer); 
+			
+			// Prendre une place déjà créer pour une matrice
+			map->data = realloc(map->data, sizeof(char *) * (map->height + 1));
+			// Réserver de la mémoire de la taille de la matrice
+			map->data[map->height] = malloc(map->width + 1);
+			// Stocker les caractères de la carte
+			strcpy(map->data[map->height], buffer);
+			
+			map->height++; // Augmenter la hauteur si on peut toujour lire
+		}
+		
+		// Fermer le fichier ouvert
+		fclose(file);
+		return map;
+	}
+	
+	// Libérer la mémoire de la carte
+	void free_map(Map *map) {
+		// Parcourir selon la hauteur 
+		for (int i = 0; i < map->height; i++) {
+			free(map->data[i]); // Libérer le tableau de hauteur i
+		}
+		free(map->data); // Libérer le tableau de hauteur
+		free(map); // Libérer le pointeur de la carte
+	}
+	
+	// Affichier la carte
+	void print_map(Map *map) {
+		// Parcourir le tableau par hauteur
+		for (int i = 0; i < map->height; i++) {
+			printf("%s\n", map->data[i]); // Afficher le tableau de hauteur i
+		}
+	}
+	
+	\end{lstlisting}
+
+	\vspace{1.0cm}
+	\begin{lstlisting}[
+		caption={Fichier \texttt{menu.c}},
+		captionpos=t
+		]
+		
+	#include "menu.h"
+	
+	/* Vider le scanf tantque il y a '\n' ou EOF avec getchar() */
+	void purge(void){
+		int c = 0;
+		while ((c=getchar())!='\n' && c!= EOF);
+	}
+	
+	/* Afficher le Menu principal */
+	int menu_principal(char *name_fichier) {
+		int choix, choix2;
+		printf("\n");
+		printf(" ==================== SNAKE ==================== \n");
+		printf("1. Nouvelle partie\n");
+		printf("2. Choisir la carte\n");
+		printf("3. Partie sauvegardée\n");
+		printf("4. Quitter\n");
+		printf("Choix : ");
+		scanf("%d", &choix);
+		purge();
+		
+		// Pour dire lancer le jeu: MENU_NEW
+		if (choix == 1) {
+			return MENU_NEW;
+		}
+		// Pour changer le nom fichier du carte, ensuite dire lancer le jeu: MENU_NEW
+		if (choix == 2) {
+			printf("\n");
+			printf(" ------------- Taille de la carte ------------- \n");
+			printf("1. carte%dx%d\n",16,9);
+			printf("2. carte%dx%d\n",27,14);
+			printf("3. carte%dx%d\n",49,18);
+			scanf("%d", &choix2);
+			purge();
+			
+			// Changer le nom du fichier selon le choix du jouer
+			if(choix2 == 1){
+				strcpy(name_fichier, "carte.txt");
+			}
+			if(choix2 == 2){
+				strcpy(name_fichier, "carte2.txt");
+			}
+			if(choix2 == 3){
+				strcpy(name_fichier, "carte3.txt");
+			}
+			return MENU_NEW;
+		}
+		// Pour dire lancer le sauvegarde: MENU_LOAD
+		if (choix == 3) {
+			return MENU_LOAD;
+		}
+		return MENU_LEAVE;
+	}
+	
+	/* Menu pendant le jeu */
+	char menu_direc_leave(int position) {
+		char c;
+		// Si c'est 1, il demande la direction, sinon il affiche le menu de quitte
+		if(position == 1){
+			printf("Direction (k o l m), quitter(q): ");
+		}else{
+			printf("\n");
+			printf(" ******** Vous voulez vraiment quitté? ********** \n");
+			printf("x. sauvegarder\n");
+			printf("r. recommencer\n");
+			printf("c. Choisir la carte\n");
+			printf("q. Quitter\n");
+		}
+		scanf(" %c", &c);
+		purge();
+		return c;
+	}
+	
+	/* Sauvegarder la partie dans "save.txt" */
+	void save(Snake *snake, Bonus *bonus, char *name_map) {
+		// Ouvre le fichier de sauvegarde et lis les données du fichier en écriture seule
+		FILE *f = fopen("sauvegarde/save.txt", "w");
+		if (!f) { printf("Erreur ouverture save.txt\n"); return; } // teste l'erreur d'ouverture
+		
+		// Ecrire les données dans le fichier "save.txt" (sauvegarde dans une ordre précise pour la suite de relire)
+		
+		fprintf(f, "%s\n", name_map); // Nom du fichier de niveau
+		fprintf(f, "%d\n", snake->score); // Le score
+		fprintf(f, "%d\n", snake->size);// La taille du serpent
+		
+		// Sauvegarde des segments
+		// Serpent
+		Noeud *nb = snake->body->sentNext->suiv;//
+		while (nb->cont.c != 0) {
+			fprintf(f, " %c ", nb->cont.c);
+			nb = nb->suiv;
+		}
+		fprintf(f, "\n"); // Pour la beauté de lecture dans save.txt
+		
+		// Coordonnée x
+		Noeud *nx = snake->x->sentNext->suiv;
+		while (nx->cont.i != 0) {
+			fprintf(f, "%d ", nx->cont.i);
+			nx = nx->suiv;
+		}
+		fprintf(f, "\n");
+		
+		// Coordonnée y
+		Noeud *ny = snake->y->sentNext->suiv;
+		while (ny->cont.i != 0) {
+			fprintf(f, "%d ", ny->cont.i);
+			ny = ny->suiv;
+		}
+		fprintf(f, "\n");
+		
+		// Sauvegarde du bonus
+		fprintf(f, "%d %d %d\n", bonus->x, bonus->y, bonus->footsteps);
+		
+		fclose(f);// Fermer le fichier save
+		printf(" ------------Sauvegarde effectuée--------------- \n");
+	}
+	
+	/* Charger une partie depuis save.txt */
+	int load_save(Snake **snake, Bonus **bonus, Map **map, char *name_map) {
+		//ouvert le fichier save pour lire les sauvegardes
+		FILE *f = fopen("sauvegarde/save.txt", "r"); 
+		//teste erreur d'ouverture
+		if (!f) return 0;
+		
+		// Récupérer les données(il lit dans une ordre précise)
+		// Renommer le nom du fichier par la carte de sauvegarde
+		fscanf(f, "%s", name_map);
+		// Charger la carte
+		*map = load_map(name_map);
+		
+		// Prendre le score et taille
+		int score, size;
+		fscanf(f, "%d", &score);
+		fscanf(f, "%d", &size);
+		
+		// Créer le serpent et charger les infordmations
+		*snake = create_Snake();
+		(*snake)->score = score;
+		(*snake)->size = size;
+		
+		// Ajouter au fur et à mesure les lettres du corps et ces coordonnées
+		// Prendre puis inserte
+		Elt b, x, y;
+		for (int i = 1; i <= size; i++) {
+			fscanf(f, " %c ", &b.c); // Un espace précise devant pour qu'il ignore les espaces à la suite
+			insert((*snake)->body, i, b);
+		}
+		
+		for (int k = 1; k <= size; k++) {
+			fscanf(f, "%d", &x.i);
+			insert((*snake)->x ,k, x);
+		}
+		
+		for (int j = 1; j <= size; j++) {
+			fscanf(f, "%d", &y.i);
+			insert((*snake)->y, j, y);
+		}
+		
+		// Récupérer les informations du bonus
+		int bx, by, footsteps;
+		fscanf(f, "%d %d %d", &bx, &by, }&footsteps);
+		// Créer et charger le bonus
+		*bonus = create_Bonus(*map, *snake);
+		(*bonus)->x = bx;
+		(*bonus)->y = by;
+		(*bonus)->footsteps = footsteps;
+		
+		fclose(f); // Fermeture du fichier save
+		return 1;
+	}	
+	
+	\end{lstlisting}
+	
+	\begin{lstlisting}[
+		caption={Fichier \texttt{noeud.c}},
+		captionpos=t
+		]
+		
+	#include "noeud.h"
+	
+	/* Créer un noeud e */
+	Noeud* create_Noeud(Elt e, Noeud* s){
+		// Réserver un place de type Noeud
+		Noeud *n = malloc (sizeof(Noeud));
+		// Remplir les données du noeud
+		n->cont = e;
+		n->sent = 0;
+		n->suiv = s;
+		return n;
+	}
+	
+	/* Libèrer la mémoire de noeud */
+	void freeNoeud(Noeud* n){
+		free(n);
+	}
+	
+	/* Créer le sentinelle */
+	Noeud* create_Sent(){
+		//definir l'entier 0
+		Elt e = {.i = 0};
+		//créer le noeud
+		Noeud *n = create_Noeud(e, NULL);
+		//noeud -> sentinelle
+		n->sent = 1;
+		return n;
+	}
+	
+	/* Chercher le noeud suivant */
+	Noeud* next(Noeud* n){
+		return n->suiv;
+	}
+	
+	/* Le contenu du noeud */
+	Elt content(Noeud *n){
+		return n->cont;
+	}
+	
+	/* Relier 2 noeuds ensemble, l'un après l'autre */
+	void changeNext(Noeud * n, Noeud * p){
+		n->suiv = p;
+	}
+	
+	\end{lstlisting}
+	
+	\newpage
+	\begin{lstlisting}[
+		caption={Fichier \texttt{snake.c}},
+		captionpos=t
+	]
+		
+	#include "snake.h"
+	
+	/* Tableau de voyelle */
+	char vowel[] = {'a', 'e', 'i', 'o', 'u', 'y'};
+	
+	
+	/* Créer le serpent tout vide (réserver des places) */
+	Snake* create_Snake(){
+		Snake *snake = malloc(sizeof(Snake)); 
+		
+		snake->size = 0;
+		snake->body = create_Liste();
+		snake->x = create_Liste();
+		snake->y = create_Liste();
+		snake->score = 0;
+		}
+		return snake;
+	}
+	
+	
+	/*Libèrer la mémoire du serpent, d'abord ses pointeurs des 'Liste', 
+	puis le pointeur de 'Snake'*/
+	void freeSnake(Snake *snake){
+		freeListe(snake->body);
+		freeListe(snake->x);
+		freeListe(snake->y);
+		free(snake);
+	}
+	
+	
+	/* Initialiser le serpent à une taille 1, d'un corps 'z', un score 0 
+	et d'un coordonnée(1, 1). Il sera toujours sur le coordonnée(1, 1) */
+	void init_snake(Snake *snake){
+		Elt v = {'z', 1};
+		
+		snake->size = 1;}
+		snake->score = 0;
+		insert(snake->body, 0, v);
+		insert(snake->x, 0, v);
+		insert(snake->y, 0, v);
+		
+	}
+	
+	/* Ecrire le serpent dans la carte */
+	void write_snake(Map *map, Snake *snake){
+		// Teste des entrées d'une erreur: NULL (vide)
+  		if (map == NULL || map->data == NULL || snake == NULL) return; 
+		// Des noeuds pour faire le parcours de la liste
+  		Noeud *actuel_body = snake->body->sentNext->suiv; 
+  		Noeud *actuel_x = snake->x->sentNext->suiv;
+  		Noeud *actuel_y = snake->y->sentNext->suiv;
+	
+		// Parcourir une liste (x, y et body ont tous la même taille)
+  		while (actuel_body->cont.c != 0){ 
+  		// Ecrire le serpent
+  			map->data[actuel_y->cont.i][actuel_x->cont.i] = actuel_body->cont.c;
+  			// Mettre à jour(le suivant)
+    			actuel_x = actuel_x->suiv;
+    			actuel_y = actuel_y->suiv;
+    			actuel_body = actuel_body->suiv;
+  		}
+	}
+
+	
+	/* Supprimer le coordonnée de la queue quand le serpend se déplace sans manger */
+	void delete_queue(Snake *snake){
+		delete(snake->x, snake->size+1);
+		delete(snake->y, snake->size+1);
+	}
+	
+	/* Booléen pour dire si la case du coordonnée x et y de la carte est un bonus ou pas */
+	bool is_Bonus(Bonus *bonus, int x, int y){
+		if(bonus->x == x && bonus->y == y){
+			return true;
+		}else{
+			return false;
+		}
+	}
+	
+	/* Booléen pour dire si le bonus est une voyelle ou pas */
+	bool belongs_vowel(Bonus *bonus){
+		int i = 0, v = 0;
+		
+		/* Parcourir le tableau de voyelle*/
+		while(i < NB_VOWEL && v == 0){
+			/* Si c'est une voyelle, on sorte directement (v = 1), sinon on continue */
+			if(bonus->letter == vowel[i]){
+				v = 1;
+			}else{
+				i++;
+			}
+		}
+		/* Si i = 6 donc faux (car les indice du tableau de voyelles sont de 0 à 5), donc si i est plus petit que 6, c'est qu'il à trouver: vraie */
+		
+		return i < 6;
+	}
+	
+	/* Manger le bonus */
+	void eat_insert(Snake *snake, Bonus* bonus, Map *map){
+		// Mettre en Elt pour le fonction insert
+		Elt b = {.c = bonus->letter};
+		Elt x = {.i = bonus->x}; 
+		Elt y = {.i = bonus->y};
+		
+		// Augmenté la taille du serpent
+		snake->size += 1;
+		// Si c'est une voyelle, ajouté 10 points, sinon 5 points)
+		if(belongs_vowel(bonus)){}
+			snake->score += 10;
+		}else{
+			snake->score += 5;
+		}
+		
+		// Insérer dans la tête le bonus mangé
+		insert(snake->body, 0, b);
+		insert(snake->x, 0, x);
+		insert(snake->y, 0, y);
+	}
+	
+	/* Booléen pour dire si la case du coordonnée x et y de la carte est le corps du serpent ou pas */
+	bool belongs_snake(Snake* snake, int x, int y){
+		// Des noeuds pour faire le parcours de la liste
+		// ->suiv, pour ignorer le 0 du début; liste vide = [0, 0]
+		Noeud *actuel_x = snake->x->sentNext->suiv;
+		Noeud *actuel_y = snake->y->sentNext->suiv;
+		
+		// Parcourir une liste (x, y ont tous la même taille)
+		// Actuel_body->cont.c != 0, pour ignorer le 0 de la fin
+		while (actuel_y->cont.c != 0){
+			// Si la case du coordonnée x et y est égale à ieme corps du serpent, on sorte (return)
+			if(actuel_x->cont.i == x && actuel_y->cont.i == y){
+				return true;
+			}
+			// Mettre à jour(le suivant)
+			actuel_x = actuel_x->suiv;
+			actuel_y = actuel_y->suiv;
+		}
+		// Sinon c'est faux
+		return false;
+	}
+	
+	/* Voir la case du coordonnée x et y est-il un bonus, une partie du corps du serpent, un mur ou vide
+	si il retourne 2, il mange: 0, il perdre: 1, vide */
+	int case_next(Map *map, int x, int y, Bonus *bonus, Snake *snake){
+		//la case du coordonnée x et y
+		char valeur = map->data[y][x];
+		
+		// Si c'est un bonus
+		if(is_Bonus(bonus, x, y)){
+			eat_insert(snake, bonus, map);
+			return 2; 
+			// Si c'est une partie du corps du serpent ou un mur
+		}else if(belongs_snake(snake, x, y) || valeur == '#'){
+			return 0;
+		}else{
+			return 1;
+		}
+	}
+	
+	/* Deplacer/manger/perdre le serpent selon la touche d'entrée(boutton) */
+	int mouvement_snake(Snake *snake, char button, Map *map, Bonus *bonus){
+		// Resultat pour definir si le jeu continue(0) ou le jeu est perdu (1)
+		int resultat = 0, mouvement;
+		// Le coordonnée x et y de la tête du serpent
+		Elt x_elt = ithElt(snake->x, 1);
+		Elt y_elt = ithElt(snake->y, 1);
+		
+		// Selon les touches
+		switch(button){
+			// Avancer
+			case 'o':
+			// Regarder la case en haut (1 pour avancer, 2 pour manger, 1 pour perdre)
+			mouvement = case_next(map, x_elt.i, y_elt.i-1, bonus, snake);
+			
+			if(mouvement == 1){
+				/* Inserte x et y la case suivant au serpent pour qu'il déplace,
+				et supprime le coordonée de la queue, de même pour les autres touches */
+				y_elt.i--;
+				insert(snake->x, 0, x_elt);
+				insert(snake->y, 0, y_elt);
+				delete_queue(snake);
+			}else if(mouvement == 2){
+				bonus->footsteps = 10; // Pour que le jeu crée un nouveau bonus après l'avoir mangé
+			}else{
+				resultat = 1;
+			}
+			break; // fini définitivement
+			
+			// à gauche
+			case 'k':
+			// Regarder la case à gauche (1 pour avancer, 2 pour manger, 1 pour perdre)
+			mouvement = case_next(map, x_elt.i-1, y_elt.i, bonus, snake);
+			
+			if(mouvement == 1){
+				x_elt.i--;
+				insert(snake->x, 0, x_elt);
+				insert(snake->y, 0, y_elt);
+				delete_queue(snake);
+			}else if(mouvement == 2){
+				bonus->footsteps = 10; 
+			}else{
+				resultat = 1;
+			}
+			break;
+			
+			// à droite
+			case 'm':
+			// Regarder la case à droite (1 pour avancer, 2 pour manger, 1 pour perdre)
+			mouvement = case_next(map, x_elt.i+1, y_elt.i, bonus, snake);
+			
+			if(mouvement == 1){
+				x_elt.i++;
+				insert(snake->x, 0, x_elt);
+				insert(snake->y, 0,y_elt);
+				delete_queue(snake);
+			}else if(mouvement == 2){
+				bonus->footsteps = 10; 
+			}else{
+				resultat = 1;
+			}
+			break;
+			
+			// Reculer
+			case 'l':
+			// Regarder la case en bas (1 pour avancer, 2 pour manger, 1 pour perdre)
+			mouvement = case_next(map, x_elt.i, y_elt.i+1, bonus, snake);
+			
+			if(mouvement == 1){
+				y_elt.i++;
+				insert(snake->x, 0, x_elt);
+				insert(snake->y, 0, y_elt);
+				delete_queue(snake);
+			}else if(mouvement == 2){
+				bonus->footsteps = 10; 
+			}else{
+				resultat = 1;
+			}
+			break; 
+		}
+		return resultat;
+	}
+		
+	\end{lstlisting}
+	
+	\vspace{1.0cm}
+	\begin{lstlisting}[
+		caption={Fichier \texttt{spawn.c}},
+		captionpos=t
+		]
+		
+	#include "snake.h" // Pour utilisé les fonctions de serpent 
+	#include "spawn.h" // et bonus et autre include dans ces fichiers
+	
+	
+	// Tableau d'alphabet
+	char tab[] = {'a', 'b', 'c', 'd', 'e',
+		'f', 'g', 'h', 'i', 'j', 
+		'k', 'l', 'm', 'n', 'o',
+		'p', 'q', 'r', 's', 't',\newpage
+		'u', 'v', 'w', 'x', 'y',
+		'z'};
+	
+	/* Créer le bonus aléatoire */
+	Bonus* create_Bonus(Map *map, Snake * snake){
+		// Crée un espace
+		Bonus *bonus = malloc(sizeof(Bonus));
+		bonus->letter = tab[rand() % 26]; // Aléatoire entre 0 et 25
+		bonus->x = 1 + rand() % (map->width-2); // Aléatoire entre 1 et longeur-2
+		bonus->y = 1 + rand() % (map->height-2); // Aléatoire entre 1 et largeur-2
+		// (-2 pour pas dépacer la map et pas mette sur le bord de la map)
+		
+		bonus->footsteps = 0; // Initialisation de pas
+		return bonus;
+	}
+	
+	/* Initialiser le bonus, pour qu'il n'est pas sur le mur, ni sur le serpent */
+	Bonus * init_Bonus(Snake * snake, Map *map){
+		Bonus * bonus = create_Bonus(map, snake);
+		int x = bonus->x, y = bonus->y;
+		// tantque la case du bonus appartient au serpent ou au mur, recréer une autre
+		while(belongs_snake(snake, x, y) || map->data[y][x] == '#') {
+			freeBonus(bonus);
+			bonus = create_Bonus(map, snake);
+			x = bonus->x, y = bonus->y; // Met à jour x et y du bonus
+		}
+		return bonus;
+	}
+	
+	/* Libèrer la mémoire de bonus */
+	void freeBonus(Bonus *bonus){
+		free(bonus);
+	}
+	
+	/* Ecrire le bonus sur la carte */
+	void write_bonus(Map *map, Bonus * bonus){
+		map->data[bonus->y][bonus->x] = bonus->letter; 
+	}
+	
+	/* Supprimer le bonus */
+	Bonus* delete_bonus(Map *map, Bonus *bonus, Snake * snake){
+		// Supprimer seulement si le nombre de pas égale à 10 pas, et crée
+		if(bonus->footsteps >= 10){
+			freeBonus(bonus);
+			bonus = init_Bonus(snake, map);
+		}
+		return bonus;
+	}
+	
+	/*Supplément pour le jeu snake en SDL*/
+	/*chercher si variable appartient à l'alphabet*/
+	bool belongs_lettrer(char variable){
+  		int i=0, v = 0;
+  		while(i< SOMME_LETTER && v == 0){
+    			if(variable == tab[i]){
+    				 v = 1;
+    		}else{
+      		i++;
+    		}
+  		}	
+  		return i < SOMME_LETTER;
+	}	
+
+
+	\end{lstlisting}
+
+	
+	\newpage
+	\begin{lstlisting}[
+		caption={Fichier \texttt{liste.c}},
+		captionpos=t
+		]
+		
+	#include "liste.h"
+	
+	/* Créer une liste [0, 0] */
+	Liste* create_Liste(){
+		Liste *l = malloc(sizeof(Liste)); // Alloue de la mémoire pour liste
+		
+		/* Créer les sentinelles */
+		l->sentNext = create_Sent(); // Sentinelle avant
+		l->sentBack = create_Sent(); // Sentinelle arrière
+		
+		changeNext(l->sentNext, l->sentBack); // Relier le sentinelle avant et le arrière
+		return l;
+	}
+	
+	// Libère la mémoire de la liste
+	/* Libére la mémoire de chaque noeud de la liste, puis de la liste pour ne pas perdre les noeuds avant */
+	void freeListe(Liste* l){
+		// Première noeud
+		Noeud *n = l->sentNext;
+		// Tantque il y a un noeud, libérer et passe aux suivant
+		while(n != NULL){
+			l->sentNext = n->suiv; // Pour pas perdre le noeud suivant
+			freeNoeud( n ); // Libérer le noeud
+			n = l->sentNext;
+		}
+		free(l);
+	}
+	
+	/* Chercher l'ième noeud */
+	Noeud* ithNoeud(Liste* l, int i){
+		int j = 0; // Initialise j
+		Noeud* res; 
+		res = l->sentNext;
+		
+		// Chercher tant que il y a un noeud et au ième
+		while(res != NULL && j < i){ 
+			res = res->suiv;
+			j++;
+		}
+		return res;
+	}
+	
+	/* Chercher le contenu l'ième noeud */
+	Elt ithElt(Liste* l, int i){
+		return (content(ithNoeud(l, i)));
+	}
+	
+	/* Inserer dans l'ième place un noeud */
+	void insert(Liste *l, int i, Elt e){
+		Noeud* prec = ithNoeud(l,i-1); // Noeud précédent
+		// Créer et pointer le noeud aux précédent
+		Noeud *n = create_Noeud(e, next(prec)); 
+		changeNext(prec, n);
+	}
+	
+	/* Supprimer l'ième noeud */
+	void delete(Liste *l, int i){
+		if (l == NULL) {exit(EXIT_FAILURE);} // Si c'est vide, il sort et affiche une erreur 
+		
+		Noeud* prec = ithNoeud(l,i-1); // Noeud précédent
+		Noeud *n = next(prec); // Noeud suivant
+		changeNext(prec,next(n)); // Pointer le noeud suivant au précédent 
+		freeNoeud( n ); // Libérer
+	}
+	
+	\end{lstlisting}
+	
+	\begin{lstlisting}[
+		caption={Fichier \texttt{main.c}},
+		captionpos=t
+		]
+		
+	/* Fichier principal du jeu de serpent */
+	
+	#include <stdio.h> // Pour écrire et lire
+	#include <stdlib.h> // Pour les réserves et libéres d'espace et aléatoire
+	#include <string.h> // Pour les fonctions str: strlen(), strcpy()
+	#include <time.h> // Pour utiliser time()
+	
+	// Pour utiliser tous les fonctions qu'on à créer pour le jeu: map, serpent, bonus et menu
+	#include "map.h" 
+	#include "snake.h"
+	#include "spawn.h"
+	#include "menu.h"
+	
+	
+	int main(void) {
+		// Initialisation des données 
+		srand(time(NULL)); // Initialise le nombre de secondes écoulées depuis l'époque
+		Map *map = NULL;
+		Snake *snake = NULL;
+		Bonus *bonus = NULL;
+		char name_map[100]; // Tableau pour le nom du fichier de terrain (maximum 100 caractères)
+		strcpy(name_map, "carte.txt"); // Initialise la carte.txt
+		
+		int choix = menu_principal(name_map); // Faire le choix
+		// Et selon le choix: partir, jouer, jouer et le sauvegarde
+		if (choix == MENU_LEAVE) {
+			printf("Au revoir !\n");
+			return 0;
+		}
+		
+		if (choix == MENU_NEW) {
+			map = load_map(name_map); // Charger la carte
+			if (!map) { printf("Erreur map\n"); return 1; } // Tester si vide
+			
+			snake = create_Snake(); // Créer le sepent
+			init_snake(snake); // Initialiser à 'z'
+			bonus = init_Bonus(snake, map); // Créer le bonus
+		}
+		
+		if (choix == MENU_LOAD) {
+			// Charger le sauvegarde, si il rentre, c'est qu'il y a un erreur
+			if (!load_save(&snake, &bonus, &map, name_map)) {
+				printf("Erreur chargement\n");
+				return 1;
+			}
+		}
+		
+		// Tantque le jeu roule, il mettre à jour
+		int run = 0, choix2;
+		while (!run) {
+			// Charger le bonus, le serpent et affiche la carte
+			write_bonus(map, bonus);
+			write_snake(map, snake);
+			print_map(map);
+			
+			printf("Score : %d\n", snake->score); // Afficher le score
+			
+			char c = menu_direc_leave(1); // Affiche la demande du sens
+			
+			// Quitter
+			if (c == 'q') {
+				c = menu_direc_leave(2); // Demande d'affirmation de quitter
+				
+				// Sauvegarde et relance la demande d'affirmation de quitter
+				while(c == 'x'){
+					save(snake, bonus, name_map);
+					c = menu_direc_leave(2);
+				}
+				
+				// Choisir la carte ou rejouer le jeu
+				if (c == 'c' || c == 'r') {
+					if(c == 'c'){
+						printf("\n");
+						printf(" ------------- Taille de la carte ------------- \n");
+						printf("1. carte%dx%d\n",16,9);
+						printf("2. carte%dx%d\n",27,14);
+						printf("3. carte%dx%d\n",49,18);
+						scanf("%d", &choix2);
+						getchar();
+						
+						// Change le nom de fichier selon le choix
+						if(choix2 == 1){
+							strcpy(name_map, "carte.txt");
+						}
+						if(choix2 == 2){
+							strcpy(name_map, "carte2.txt");
+						}
+						if(choix2 == 3){
+							strcpy(name_map, "carte3.txt");
+						}
+					}
+					
+					// Lance le nouveau jeu
+					// Libèrer la mémoire des données: serpent, bonus et carte
+					freeSnake(snake);
+					freeBonus(bonus);
+					free_map(map);
+					
+					map = load_map(name_map); // Recharge la carte
+					// Recréer les données, et les initialisations
+					snake = create_Snake();
+					init_snake(snake);
+					bonus = init_Bonus(snake, map);
+				}
+				
+				// si l'utilisateur veux ou non quitter la partie
+				if (c == 'q') {
+					printf("\n");
+					printf("Fin de la partie\n");
+					break; // Sortir imédiatement
+				}
+			}
+			// Les touches de direction
+			else if(c == 'o' || c == 'l' ||c == 'k' ||c == 'm'){
+				// Le serpent mange(0)/avance(0)/perdre(1)
+				run = mouvement_snake(snake, c, map, bonus);
+				
+				bonus = delete_bonus(map, bonus, snake); // Vérifier si le nombre de pas >= 10 et recréer
+				if (run == 0) bonus->footsteps++; // Ajouter un pas quand le serpent bouge
+				
+				free_map(map); // Nettoyage de la carte après utilisation
+				
+				
+				map = load_map(name_map); // Initialiser la map
+				if (!map) { printf("Erreur map\n"); break; } // Teste d'erreur de vide
+			}else{
+				
+			}
+			
+		}
+		
+		// Affichier le phrase de fin
+		printf("Perdu ! Score final : %d\n", snake->score);
+		
+		// Libèrer toutes les données de la mémoire à libèrer
+		freeSnake(snake); 
+		freeBonus(bonus);
+		free_map(map);
+		
+		return 0;
+	}
+
+	\end{lstlisting}
+	
+	\begin{lstlisting}[
+		caption={Fichier \texttt{main.c} de SDL},
+		captionpos=t
+		]
+	#include <stdio.h>
+#include <stdlib.h>
+#include <string.h>
+#include <SDL2/SDL.h>
+#include "map.h"
+#include "snake.h"
+#include "spawn.h"
+
+#define TILE_SIZE 32
+
+
+int main(void) {
+    Map *map = NULL;
+    Snake *snake = NULL;
+    Bonus *bonus = NULL;
+    char nom_map[100] = "carte.txt";
+
+    Uint32 last_input_time = 0;    // tempo de la manipulation
+    Uint32 last_snake_time = 0;    // tempo de la mise a jour de serpent
+    char next_direction = '\0';    // prochain touche
+    char current_direction = '\0';  // touche executer
+
+    //initialisation
+    map = load_map(nom_map);
+    snake = create_Snake();
+    init_snake(snake);
+    bonus = init_Bonus(snake, map);
+
+    //initialisation sdl
+    SDL_Init(SDL_INIT_VIDEO);
+
+    //initialisation de la taille du jeu
+    SDL_Window *window = SDL_CreateWindow(
+        "Map SDL",
+        SDL_WINDOWPOS_CENTERED,
+        SDL_WINDOWPOS_CENTERED,
+        map->width * TILE_SIZE,
+        map->height * TILE_SIZE,
+        0
+    );
+
+    //créer la fenêtre du jeu
+    SDL_Renderer *renderer = SDL_CreateRenderer(window, -1, SDL_RENDERER_ACCELERATED);
+
+    SDL_Event event; //evenement sdl (ce que le joueur fait)
+    
+    int fin = 0;
+
+    while (!fin) {
+        //il affiche sur terminal, et charge aussi( si on enlève, il n'y a plus rien sur SDL)
+        write_bonus(map, bonus);
+        write_snake(map, snake);
+        print_map(map);
+
+
+        printf("Score : %d\n", snake->score);
+
+        //les touches et le croix pour sortir de la page(SDL_QUIT)
+        if (SDL_PollEvent(&event)){
+            switch (event.type){
+            case SDL_QUIT:
+                fin = 1;
+                break;
+            
+            case SDL_KEYDOWN:
+                switch (event.key.keysym.sym){
+                    case SDLK_q:
+                        fin = 1;
+                        break;
+                    
+                    case SDLK_o:
+                        next_direction = 'o';
+                        break;
+
+                    case SDLK_l:
+                        next_direction = 'l';
+                        break;
+
+                    case SDLK_k:
+                        next_direction = 'k';
+                        break;
+
+                    case SDLK_m:
+                        next_direction = 'm';
+                        break;
+                }
+            }  
+        }
+
+        // chaque 50ms charge le jeu
+        Uint32 current_time = SDL_GetTicks();
+        if (current_time - last_input_time >= 50) {
+            last_input_time = current_time;
+            
+            // mettre a jour la touche 
+            if (next_direction != '\0') {
+                current_direction = next_direction;
+                next_direction = '\0';  // initialisation next_direction
+            }
+        }
+
+        SDL_SetRenderDrawColor(renderer, 0, 0, 0, 255); //initialiser font noir
+        SDL_RenderClear(renderer); //coloré
+
+        //colorer la map
+        for (int y = 0; y < map->height; y++){
+                for (int x = 0; x < map->width; x++){
+                    SDL_Rect tile = {
+                        x * TILE_SIZE,
+                        y * TILE_SIZE,
+                        TILE_SIZE,
+                        TILE_SIZE
+                    };
+                        
+                    if (map->data[y][x] == '#'){
+                            SDL_SetRenderDrawColor(renderer, 150, 150, 150, 255); // mur
+                    }else if (belongs_lettrer(map->data[y][x])){
+                        if(bonus->y ==y && bonus->x == x){
+                            SDL_SetRenderDrawColor(renderer, 200, 50, 50, 255); // bonus 
+                        }else{
+                            SDL_SetRenderDrawColor(renderer, 0, 120, 0, 255); // snake
+                        }
+                    }else{
+                        SDL_SetRenderDrawColor(renderer, 30, 30, 30, 255); // vide
+                    }
+                    SDL_RenderFillRect(renderer, &tile);
+            }
+        }
+        SDL_RenderPresent(renderer); 
+
+        //chaque 300ms charger la map
+        if (current_time - last_snake_time >= 300) {
+            last_snake_time = current_time;
+            
+
+            fin = mouvement_snake(snake, current_direction, map, bonus);
+
+            bonus = delete_bonus(map, bonus, snake);
+            if (!fin) bonus->footsteps++;
+                
+                
+            // initialisation de la map
+            free_map(map);
+            map = load_map(nom_map);
+        }
+    
+    }
+
+    printf("Perdu ! Score final : %d\n", snake->score);
+
+    //liberer tout
+    freeSnake(snake);
+    freeBonus(bonus);
+    free_map(map);
+    SDL_DestroyRenderer(renderer);
+    SDL_DestroyWindow(window);
+    SDL_Quit();
+    return 0;
+}
+
+
+	\end{lstlisting}	
+	
+	\newpage
+	\vspace{2.0cm}
+	\begin{lstlisting}[
+    		language=make,
+    		caption={Fichier \texttt{Makefile}},
+    		captionpos=t
+	]
+	
+	#compiler pour chaque fichier puis all pour compiler tout dans jeu, clean il supprime tout les fichier.o et le jeu dans bin si il existe	
+	#-I... pour chercher les bibliotèques .h
+	#pour le code sdl, il n'y a pas de fichier menu, donc un make sans menu.o .h .c ...	
+	
+	fichier_o = obj/map.o obj/main.o obj/noeud.o obj/liste.o obj/snake.o obj/spawn.o obj/menu.o
+	
+	all: map.o main.o noeud.o liste.o snake.o spawn.o menu.o
+	gcc $(fichier_o) -o bin/jeu
+	
+	map.o: src/map.c
+	gcc -c src/map.c -Wall -Iheader -o obj/map.o
+	
+	noeud.o: src/noeud.c
+	gcc -c src/noeud.c -Wall -Iheader -o obj/noeud.o
+	
+	liste.o: src/liste.c
+	gcc -c src/liste.c -Wall -Iheader -o obj/liste.o
+	
+	snake.o: src/snake.c
+	gcc -c src/snake.c -Wall -Iheader -o obj/snake.o
+	
+	spawn.o: src/spawn.c
+	gcc -c src/spawn.c -Wall -Iheader -o obj/spawn.o
+	
+	menu.o: src/menu.c
+	gcc -c src/menu.c -Wall -Iheader -o obj/menu.o
+	
+	main.o: src/main.c
+	gcc -c src/main.c -Wall -Iheader -o obj/main.o
+	
+	clean: 
+	rm obj/*.o ; rm bin/jeu
+	
+		
+	\end{lstlisting}
+	
+		
+	\newpage
+	% -------------------
+	\section{Compilation et exécution}
+	\vspace{0.5cm}
+	
+	D'abord accéder au dossier souhaiter(terminal ou sdl):
+	\begin{lstlisting}[language=bash]
+		/code_terminal
+	\end{lstlisting}
+	\begin{lstlisting}[language=bash]
+		/code_sdl
+	\end{lstlisting}
+	
+	La compilation du programme se fait à l’aide de la commande suivante :
+	
+	\begin{lstlisting}[language=bash]
+		make
+	\end{lstlisting}
+	
+	Le jeu est ensuite lancé avec la commande :
+	
+	\begin{lstlisting}[language=bash]
+		./bin/jeu
+	\end{lstlisting}
+	
+	% -------------------
+	\section{Difficultés rencontrées}
+	\vspace{0.5cm}
+	
+	L’insertion des variables dans les listes du serpent a été compliquée. On oubliait souvent les sentinelles avant et arrière, ainsi que les valeurs à 0 qui ne font pas partie du serpent. Ces oublis provoquaient des erreurs dans le fonctionnement du jeu.
+	
+	La gestion du bonus a aussi posé problème. Au lieu que le serpent arrive sur la case du bonus puis le mange, les coordonnées devenaient difficiles à gérer. La tête du serpent et le bonus avaient les mêmes coordonnées, ce qui obligeait à modifier toute la liste des positions en x et en y. En réfléchissant autrement, il suffisait de regarder la case suivante et de se demander ce que le serpent devait faire. Cela a permis d’éviter de modifier toute la liste lorsque le bonus est mangé.
+	
+	Concernant la SDL, la mise à jour du jeu était difficile à régler. Lorsque le jeu était trop rapide, le serpent se déplaçait trop vite. Mais lorsque la mise à jour était ralentie, les touches du clavier ne répondaient pas immédiatement et le changement de direction du serpent se faisait avec du retard. Il a donc fallu séparer la gestion des touches et la mise à jour du jeu. De plus, le menu en SDL était trop compliqué à programmer et, par manque de temps, il n’a pas pu être terminé.
+	
+	% -------------------
+	\vspace{0.5cm}
+	\subsection{Arborescence du projet}
+	
+	Le projet est structuré autour de plusieurs fichiers sources et fichiers d’en-tête afin de séparer les responsabilités :
+	
+	\begin{itemize}
+		\item \texttt{main.c} : point d’entrée du programme,
+		\item \texttt{snake.c / snake.h} : gestion du serpent,
+		\item \texttt{liste.c / liste.h} et \texttt{noeud.c / noeud.h} : structures de données,
+		\item \texttt{map.c / map.h} : gestion de la carte,
+		\item \texttt{menu.c / menu.h} : interface utilisateur en terminal,
+		\item \texttt{spawn.c / spawn.h} : génération des éléments du jeu.
+	\end{itemize}
+	
+	Un \texttt{Makefile} est également utilisé afin de faciliter la compilation du projet.
+	
+	
+	\vspace{0.5cm}
+	% -------------------
+	\section{Conclusion}
+	
+	\subsection{Limites et perspectives}
+	
+	Dans ce projet, nous avons réalisé le jeu Snake en deux versions : une version fonctionnant dans le terminal et une version avec une interface graphique à l’aide de la bibliothèque Simple DirectMedia Layer (SDL).
+	La version terminal nous a permis de nous concentrer principalement sur le fonctionnement du jeu, comme les déplacements du serpent, la gestion des collisions et l’apparition de la nourriture.
+	
+	La version graphique avec SDL a ensuite permis d’améliorer l’affichage et de rendre le jeu plus agréable à utiliser. Le fait de pouvoir réutiliser une grande partie du code déjà écrit montre que la logique du jeu était bien séparée de l’affichage, ce qui a facilité l’ajout de cette interface graphique.
+	
+	Les objectifs du projet ont donc été atteints, car le jeu est jouable, fonctionnel et existe sous deux formes différentes(sdl et terminal).
+	
+	Même si le jeu fonctionne correctement, certaines améliorations pourraient encore être apportées.
+	Par exemple, le jeu ne propose qu’un seul niveau de difficulté et l’interface graphique reste assez simple. Il n’y a pas non plus de système de score avancé ni de sauvegarde des résultats.
+	
+	Pour aller plus loin, il serait possible d’ajouter :
+	
+	- plusieurs niveaux de difficulté,
+	
+	- un système de score plus complet,
+	
+	- des améliorations visuelles comme des animations ou des sons,
+	
+	- de nouvelles règles ou mécaniques de jeu.
+	
+	Ces améliorations permettraient de rendre le jeu plus complet et plus intéressant, tout en approfondissant les connaissances en programmation et en développement de projet.
+	
+	
+\end{document}
