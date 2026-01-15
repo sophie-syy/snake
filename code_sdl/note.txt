@@ -1,9 +1,0 @@
-Installation(s) de(s) bibliothèque(s) pour le jeu:
-sudo apt install libsdl2-dev
-
-Pour lancer le jeu:
-aller dans: /code_sdl
-lancer: make
-lancer: ./bin/jeu
-
-les touches sont indiquées selon le texte.
