@@ -1,9 +1,0 @@
-Installation(s) de(s) bibliothèque(s) pour le jeu:
-aucun
-
-Pour lancer le jeu:
-aller dans: /code_terminal
-lancer: make
-lancer: ./bin/jeu
-
-les touches sont indiquées selon le texte.
